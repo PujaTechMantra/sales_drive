@@ -1,0 +1,26 @@
+{
+  "menu": [
+    {
+      "url": "admin/dashboard",
+      "name": "Dashboards",
+      "icon": "menu-icon tf-icons ri-home-smile-line",
+      "slug": "dashboard",
+      "submenu": [
+    
+      ]
+    },
+    
+    {
+      "name": "User Management",
+      "icon": "menu-icon tf-icons ri-database-2-line",
+      "slug": "laravel-example",
+      "submenu": [
+        {
+          "url": "admin/user-management/user-list",
+          "name": "User List",
+          "slug": "laravel-example-user-management"
+        }
+      ]
+    }
+  ]
+}
