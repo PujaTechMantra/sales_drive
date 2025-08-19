@@ -36,8 +36,8 @@
         </a>
         <ul class="menu-sub">
           
-          <li class="menu-item {{ (request()->is('admin/master-module/client')) ? 'open' : '' }}">
-            <a href="#" class="menu-link">
+          <li class="menu-item {{ (request()->is('admin/master-module/clients')) ? 'open' : '' }}">
+            <a href="{{route('admin.client.list')}}" class="menu-link">
               <div>Client</div>
             </a>
           </li>
