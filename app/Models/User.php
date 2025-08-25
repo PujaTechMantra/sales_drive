@@ -47,4 +47,9 @@ class User extends Authenticatable
       'password' => 'hashed',
     ];
   }
+
+  public function slotbooking()
+  {
+      return $this->hasOne(SlotBooking::class, 'client_id');
+  }
 }

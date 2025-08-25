@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\{AdminAuth, PreventBackHistory, CheckPermission}; //Import your middleware
+use App\Http\Middleware\{AdminAuth, PreventBackHistory, CheckPermission, ClientMiddleware}; //Import your middleware
 
 return Application::configure(basePath: dirname(__DIR__))
   ->withRouting(
@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         'admin' => AdminAuth::class,
         'prevent-back-history' => PreventBackHistory::class, // Correct: use alias, not global
         'check.permission' => CheckPermission::class,
+        'client'  => ClientMiddleware::class,
       ]);
   })
   ->withExceptions(function (Exceptions $exceptions) {

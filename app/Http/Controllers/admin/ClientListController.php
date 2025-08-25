@@ -61,10 +61,11 @@ class ClientListController extends Controller
 
     public function update(Request $request) {
         $request->validate([
-            'id'        => 'required|exists:clients,id',
+            'id'        => 'required|exists:users,id',
             'name'      => 'required|string|max:255',
             'email'     => 'nullable|email|max:255',
             'mobile_no' => 'nullable|string|max:20',
+            'address'   => 'nullable|string',
         ]);
 
         $client = User::findOrFail($request->id);

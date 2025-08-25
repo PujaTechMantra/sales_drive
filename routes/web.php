@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 //New Route
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\admin\{UserListController, ClientListController};
+use App\Http\Controllers\client\{ClientAuthController, SlotBookingController};
 
 //End New Route
 
@@ -70,11 +71,6 @@ Route::get('/pages/account-settings-notifications', [AccountSettingsNotification
 Route::get('/pages/account-settings-connections', [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');
 Route::get('/pages/misc-under-maintenance', [MiscUnderMaintenance::class, 'index'])->name('pages-misc-under-maintenance');
-
-// authentication
-// Route::get('/auth/login-basic', [LoginBasic::class, 'index'])->name('auth-login-basic');
-// Route::get('/auth/register-basic', [RegisterBasic::class, 'index'])->name('auth-register-basic');
-// Route::get('/auth/forgot-password-basic', [ForgotPasswordBasic::class, 'index'])->name('auth-reset-password-basic');
 
 // cards
 Route::get('/cards/basic', [CardBasic::class, 'index'])->name('cards-basic');
@@ -150,5 +146,25 @@ Route::prefix('admin')->group(function () {
             Route::get('/status/{id}', [ClientListController::class, 'status'])->name('admin.client.status');
             Route::post('/delete', [ClientListController::class, 'delete'])->name('admin.client.delete');
         });
+    });
+});
+
+
+//client
+Route::get('/login',[ClientAuthController::class, 'showLoginForm'])->name('client.login');
+Route::post('/login', [ClientAuthController::class, 'login'])->name('client.login.submit');
+Route::post('/logout', [ClientAuthController::class, 'logout'])->name('client.logout');
+Route::get('/forgot-password', [ClientAuthController::class, 'passwordForm'])->name('client.reset-password-basic');
+Route::post('/forgot-password', [ClientAuthController::class, 'resetPassword'])->name('client.reset-password');
+
+Route::middleware(['client', 'prevent-back-history'])->prefix('user')->group(function(){
+    Route::get('/dashboard', function() {
+        return view('client.dashboard');
+    })->name('client.dashboard');
+
+    Route::prefix('slot-booking/')->group(function() {
+        Route::get('/', [SlotBookingController::class, 'index'])->name('client.slot-booking.index');
+        Route::post('/check-slot', [SlotBookingController::class, 'checkSlot'])->name('client.slot-booking.checkSlot');
+        Route::post('/store', [SlotBookingController::class, 'store'])->name('client.slot-booking.store');
     });
 });

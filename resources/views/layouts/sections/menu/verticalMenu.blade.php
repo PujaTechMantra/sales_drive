@@ -38,7 +38,7 @@
           
           <li class="menu-item {{ (request()->is('admin/master-module/clients')) ? 'open' : '' }}">
             <a href="{{route('admin.client.list')}}" class="menu-link">
-              <div>Client</div>
+              <div>Client Management</div>
             </a>
           </li>
           

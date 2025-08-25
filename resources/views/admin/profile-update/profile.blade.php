@@ -35,27 +35,39 @@
                         <form action="{{ route('admin.profile.update') }}" method="POST">
                             @csrf
                             
-                            <div class="form-group mb-3">
-                                <label for="name">Name</label>
-                                <input type="text" id="name" name="name" class="form-control"
-                                    value="{{ old('name', $admin->name) }}">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="name">Name</label>
+                                        <input type="text" id="name" name="name" class="form-control"
+                                            value="{{ old('name', $admin->name) }}">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="user_name">Username</label>
+                                        <input type="text" id="user_name" name="user_name" class="form-control"
+                                            value="{{ old('user_name', $admin->user_name) }}">
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="form-group mb-3">
-                                <label for="user_name">Username</label>
-                                <input type="text" id="user_name" name="user_name" class="form-control"
-                                    value="{{ old('user_name', $admin->user_name) }}">
-                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="email">Email</label>
+                                        <input type="email" id="email" name="email" class="form-control"
+                                            value="{{ old('email', $admin->email) }}">
+                                    </div>
+                                </div>
 
-                            <div class="form-group mb-3">
-                                <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control"
-                                    value="{{ old('email', $admin->email) }}">
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <label for="user_type">User Type</label>
-                                <input type="text" id="user_type" class="form-control" value="{{ $admin->user_type }}" disabled>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-4">
+                                        <label for="user_type">User Type</label>
+                                        <input type="text" id="user_type" class="form-control" value="{{ $admin->user_type }}" disabled>
+                                    </div>
+                                </div>
                             </div>
 
                             <button type="submit" class="btn btn-primary">Update Profile</button>

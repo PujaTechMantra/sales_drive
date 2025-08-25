@@ -14,7 +14,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="fw-bold mb-0">Client List</h4>
-            <a href="javascript:void(0);" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addClientModal">+ Add Client</a> 
+            <a href="#" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addClientModal">+ Add Client</a> 
         </div>
 
          <div class="card-header pt-0 pb-0">
@@ -160,6 +160,11 @@
                                     <label>Mobile</label>
                                     <input type="text" name="mobile_no" id="edit_mobile_no" class="form-control">
                                 </div>
+
+                                <div class="mb-3">
+                                    <label>Address</label>
+                                    <input type="text" name="address" id="edit_address" class="form-control">
+                                </div>
                             </div>
 
                             <div class="modal-footer">
@@ -206,27 +211,32 @@
         });
     });
 
-    // edit client
+    // edit client   
     $(document).on('click', '.editClientBtn', function () {
         let clientId = $(this).data('id');
 
+        // Generate base route from Laravel
+        let url = "{{ route('admin.client.edit', ':id') }}";
+        url = url.replace(':id', clientId); // replace placeholder with actual id
+
         $.ajax({
-            url: '/clients/' + clientId + '/edit',
+            url: url,
             type: 'GET',
             success: function (res) {
-                // Fill modal inputs with old values
                 $('#edit_client_id').val(res.id);
                 $('#edit_name').val(res.name);
                 $('#edit_email').val(res.email);
-                $('#edit_mobile').val(res.mobile_no);
+                $('#edit_mobile_no').val(res.mobile_no);
+                $('#edit_address').val(res.address);
 
                 $('#editClientModal').modal('show');
             }
         });
     });
 
+
     // Submit Edit Form
-    $('#editClientForm').on('submit', function (e) {
+    $('#updateClientForm').on('submit', function (e) {
         e.preventDefault();
 
         let formData = $(this).serialize();
@@ -235,14 +245,14 @@
             url: "{{route('admin.client.update')}}",  
             type: 'POST',
             data: formData,
-            success: function (res) {
+            success: function (data) {
                 $('#editClientModal').modal('hide');
-                toastr.success('Client updated successfully');
+                toastFire('success','Client updated successfully');
                 location.reload();
             },
             error: function (err) {
                 console.error(err);
-                toastr.error('Something went wrong!');
+                toastFire('error','Something went wrong!');
             }
         });
     });
