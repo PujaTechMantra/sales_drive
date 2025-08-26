@@ -146,6 +146,8 @@ Route::prefix('admin')->group(function () {
             Route::get('/status/{id}', [ClientListController::class, 'status'])->name('admin.client.status');
             Route::post('/delete', [ClientListController::class, 'delete'])->name('admin.client.delete');
         });
+        Route::get('/distributor-list', [ClientListController::class, 'distributorList'])->name('admin.slot-booking.distributorList');
+        
     });
 });
 
@@ -163,8 +165,10 @@ Route::middleware(['client', 'prevent-back-history'])->prefix('user')->group(fun
     })->name('client.dashboard');
 
     Route::prefix('slot-booking/')->group(function() {
-        Route::get('/', [SlotBookingController::class, 'index'])->name('client.slot-booking.index');
-        Route::post('/check-slot', [SlotBookingController::class, 'checkSlot'])->name('client.slot-booking.checkSlot');
-        Route::post('/store', [SlotBookingController::class, 'store'])->name('client.slot-booking.store');
+        Route::get('/form', [SlotBookingController::class, 'index'])->name('client.slot-booking.index');
+        Route::post('/form/check-slot', [SlotBookingController::class, 'checkSlot'])->name('client.slot-booking.checkSlot');
+        Route::post('/form/store', [SlotBookingController::class, 'store'])->name('client.slot-booking.store');
+        Route::get('/form/available-date', [SlotBookingController::class, 'getAvailableDates'])->name('client.slot-booking.getAvailableDates');
+        Route::get('/list', [SlotBookingController::class, 'distributorList'])->name('client.slot-booking.distributorList');
     });
 });

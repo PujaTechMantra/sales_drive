@@ -43,6 +43,15 @@
           </li>
           
         </ul>
+          <ul class="menu-sub">
+          
+          <li class="menu-item {{ (request()->is('admin/master-module')) ? 'open' : '' }}">
+            <a href="{{route('admin.slot-booking.distributorList')}}" class="menu-link">
+              <div>Distributor List</div>
+            </a>
+          </li>
+          
+        </ul>
       </li>
 
     

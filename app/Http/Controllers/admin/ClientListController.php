@@ -7,7 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use App\Models\{User, SlotBooking};
 
 
 class ClientListController extends Controller
@@ -93,5 +93,21 @@ class ClientListController extends Controller
             'status'    => 200,
             'message'   => 'Client data deleted successfully'
         ]);
+    }
+
+    public function distributorList(Request $request) {
+        $slotDates = SlotBooking::select('slot_date') 
+                                    ->distinct()
+                                    ->orderBy('slot_date', 'desc')
+                                    ->pluck('slot_date');
+
+        $query = SlotBooking::query();
+
+        if ($request->filled('slot_date')) {
+            $query->whereDate('slot_date', $request->slot_date);
+        }
+
+        $distributor = $query->get();
+        return view('admin.distributor.list', compact('distributor', 'slotDates'));
     }
 }

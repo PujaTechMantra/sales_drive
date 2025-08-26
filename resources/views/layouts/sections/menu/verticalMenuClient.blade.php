@@ -19,10 +19,25 @@
       </li>
 
       <li class="menu-item {{ (request()->is('client/slot-booking*')) ? 'open' : '' }}">
-        <a href="{{route('client.slot-booking.index')}}" class="menu-link">
+        <a href="javascript:void(0)" class="menu-link menu-toggle waves-effect" target="_blank">
           <i class="menu-icon fa-solid fa-house"></i>
           <div>Slot Booking</div>
         </a>
+        <ul class="menu-sub"> 
+          <li class="menu-item {{ (request()->is('client/slot-booking/form')) ? 'open' : '' }}">
+            <a href="{{route('client.slot-booking.index')}}" class="menu-link">
+              <div>Slot Booking Form</div>
+            </a>
+          </li>   
+        </ul>
+
+        <ul class="menu-sub"> 
+          <li class="menu-item {{ (request()->is('client/slot-booking/list')) ? 'open' : '' }}">
+            <a href="{{ route('client.slot-booking.distributorList')}}" class="menu-link">
+              <div>Distributor List</div>
+            </a>
+          </li>   
+        </ul>
       </li>
 
 
