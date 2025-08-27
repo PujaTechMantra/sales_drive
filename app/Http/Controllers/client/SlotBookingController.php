@@ -58,7 +58,6 @@ class SlotBookingController extends Controller
 
         return response()->json([
             'status'    => true,
-            // 'message' => 'Slot available, please enter distributor details'
             'message'   => 'Slot available, please enter distributor details',
             'slots'     => $rule->slot,
             'booked'    => $count

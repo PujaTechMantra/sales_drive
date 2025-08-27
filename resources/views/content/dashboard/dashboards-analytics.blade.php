@@ -54,7 +54,7 @@
 
       {{-- distributors --}}
       <div class="col md-4">
-        <div class="card text-center shadow-sm bg-success text-white">
+        <div class="card text-center shadow-sm bg-info text-white">
           <div class="card-body">
             <h5 class="card-title">Total Disributors</h5>
             <h2 class="fw-bold">{{ $totalDistributors}}</h2>

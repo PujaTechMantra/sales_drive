@@ -43,9 +43,9 @@
                     <tr>
                         <th>#</th>
                         <th>Distributor Name</th>
-                        <th>Address</th>
-                        <th>Contact No</th>
-                        <th>Email</th>
+                        <th>Distributor Address</th>
+                        <th>Distributor Contact No</th>
+                        <th>Distributor Email</th>
                         <th>Slot Date</th>
                     </tr>
                 </thead>
