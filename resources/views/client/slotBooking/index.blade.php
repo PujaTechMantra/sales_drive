@@ -18,7 +18,6 @@
             <label for="slot_date" class="form-label">Select Slot Date</label>
             <input type="text" class="form-control" name="slot_date" id="slot_date" placeholder="Select slot date" autocomplete="off">
 
-            {{-- <div id="slot_msg" class="mt-2"></div> --}}
             <small id="slot_msg" class="d-block mt-1"></small>
         </div>
         <div id="distributorContainer">

@@ -18,6 +18,9 @@
                         {{-- Left side (Slot Date Filter) --}}
                         <div class="form-group d-flex align-items-center mb-0">
                             {{-- <label for="slot_date" class="me-2">Slot Date</label> --}}
+                            <div class="form-group me-1 mb-0">
+                                <input type="search" class="form-control form-control-sm" name="keyword" id="keyword" value="{{ request()->input('keyword') }}" placeholder="Search something...">
+                            </div>
                             <select name="slot_date" id="slot_date" class="form-control form-control-sm select2 me-2" style="min-width: 200px;">
                                 <option value="">-- All Dates --</option>
                                 @foreach($slotDates as $date)

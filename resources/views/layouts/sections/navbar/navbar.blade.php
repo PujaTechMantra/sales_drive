@@ -55,11 +55,20 @@ $navbarDetached = ($navbarDetached ?? '');
 
           <!-- User -->
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
-            <a class="nav-link p-0" href="{{ route('admin.profile')}}">
-              <div class="avatar avatar-online">
-                <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
-              </div>
-            </a>
+            @auth('admin')
+              <a class="nav-link p-0" href="{{ route('admin.profile')}}">
+                <div class="avatar avatar-online">
+                  <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                </div>
+              </a>
+            @endauth
+            @auth('web')
+              <a class="nav-link p-0" href="javascript:void(0)">
+                <div class="avatar avatar-online">
+                  <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                </div>
+              </a>
+            @endauth
             <ul class="dropdown-menu dropdown-menu-end mt-3 py-2">
               <li>
                 <a class="dropdown-item" href="javascript:void(0);">

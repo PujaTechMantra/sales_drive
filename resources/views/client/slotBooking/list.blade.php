@@ -7,7 +7,7 @@
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h3>Distributor List for {{ ucwords(Auth::guard('client')->user()->name) }}</h3>
+            <h3>Distributor List of {{ ucwords(Auth::guard('client')->user()->name) }}</h3>
         </div>
         <div class="card-body">
             <form method="GET" action="{{ route('client.slot-booking.distributorList') }}">

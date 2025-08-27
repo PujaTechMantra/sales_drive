@@ -136,18 +136,20 @@ Route::prefix('admin')->group(function () {
         Route::get('/profile', [AdminAuthController::class, 'profile'])->name('admin.profile');
         Route::post('/update-profile', [AdminAuthController::class, 'updateProfile'])->name('admin.profile.update');
       
+        Route::prefix('master-module')->group(function(){
         //master module/client
-        Route::prefix('clients')->group(function() {
-            Route::get('/', [ClientListController::Class, 'index'])->name('admin.client.list');
-            Route::post('/store', [ClientListController::class, 'store'])->name('admin.client.store');
-            //Route::get('/show/{id}', [ClientListController::class, 'show'])->name('admin.client.show');
-            Route::get('/edit/{id}', [ClientListController::class, 'edit'])->name('admin.client.edit');
-            Route::post('/update', [ClientListController::class, 'update'])->name('admin.client.update');
-            Route::get('/status/{id}', [ClientListController::class, 'status'])->name('admin.client.status');
-            Route::post('/delete', [ClientListController::class, 'delete'])->name('admin.client.delete');
+            Route::prefix('clients')->group(function() {
+                Route::get('/', [ClientListController::Class, 'index'])->name('admin.client.list');
+                Route::post('/store', [ClientListController::class, 'store'])->name('admin.client.store');
+                //Route::get('/show/{id}', [ClientListController::class, 'show'])->name('admin.client.show');
+                Route::get('/edit/{id}', [ClientListController::class, 'edit'])->name('admin.client.edit');
+                Route::post('/update', [ClientListController::class, 'update'])->name('admin.client.update');
+                Route::get('/status/{id}', [ClientListController::class, 'status'])->name('admin.client.status');
+                Route::post('/delete', [ClientListController::class, 'delete'])->name('admin.client.delete');
+            });
+        //master module/distributor
+            Route::get('/distributor-list', [ClientListController::class, 'distributorList'])->name('admin.slot-booking.distributorList');
         });
-        Route::get('/distributor-list', [ClientListController::class, 'distributorList'])->name('admin.slot-booking.distributorList');
-        
     });
 });
 
@@ -164,7 +166,7 @@ Route::middleware(['client', 'prevent-back-history'])->prefix('user')->group(fun
         return view('client.dashboard');
     })->name('client.dashboard');
 
-    Route::prefix('slot-booking/')->group(function() {
+    Route::prefix('slot-booking')->group(function() {
         Route::get('/form', [SlotBookingController::class, 'index'])->name('client.slot-booking.index');
         Route::post('/form/check-slot', [SlotBookingController::class, 'checkSlot'])->name('client.slot-booking.checkSlot');
         Route::post('/form/store', [SlotBookingController::class, 'store'])->name('client.slot-booking.store');

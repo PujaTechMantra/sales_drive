@@ -101,10 +101,20 @@ class ClientListController extends Controller
                                     ->orderBy('slot_date', 'desc')
                                     ->pluck('slot_date');
 
-        $query = SlotBooking::query();
+        // $query = SlotBooking::query();
+        $query = SlotBooking::with('user');
 
         if ($request->filled('slot_date')) {
             $query->whereDate('slot_date', $request->slot_date);
+        }
+
+        //filter by client keyword
+        if($request->filled('keyword')) {
+            $keyword = $request->keyword;
+            $query->whereHas('user', function($q) use ($keyword) {
+                    $q->where('name', 'like', "%{$keyword}%")
+                        ->orWhere('distributor_name', 'like', "%{$keyword}%");
+            });
         }
 
         $distributor = $query->get();

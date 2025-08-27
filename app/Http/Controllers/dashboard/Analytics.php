@@ -5,70 +5,42 @@ namespace App\Http\Controllers\dashboard;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{ClassList, Student, Admin, TeacherClass, StudentAdmission};
+use App\Models\{Admin, SlotBooking};
 
 class Analytics extends Controller
 {
   
-    public function index()
-    {
-        $user = Auth::guard('admin')->user();
+    public function index(Request $request){
+    
+        $slotDates = SlotBooking::select('slot_date')
+        ->distinct()
+        ->orderBy('slot_date', 'desc')
+        ->pluck('slot_date');
 
+        // apply filter only if date is selected
+        if ($request->filled('slot_date')) {
+            $date = $request->slot_date;
 
-        // if($user->user_type == 'Teacher') { // <-- Change 'teacher' to 'Teacher'
-        //     $assignedClassIds = TeacherClass::where('teacher_id', $user->id)
-        //                         ->pluck('class_id')
-        //                         ->unique();
-        //     $totalClasses = count($assignedClassIds);
-         
-            
-        //      $totalStudents = Student::whereHas('admission', function ($q) use ($assignedClassIds) {
-        //                     $q->whereIn('class_id', $assignedClassIds);
-        //                 })
-        //                 ->whereNull('deleted_at')
-        //                 ->count();
+            $totalClients = SlotBooking::whereDate('slot_date', $date)
+                ->distinct('client_id')
+                ->count('client_id');
 
-        //                             // dd($totalStudents);
+            $totalDistributors = SlotBooking::whereDate('slot_date', $date)
+                ->distinct('distributor_name')
+                ->count('distributor_name');
 
-        //     $totalTeachers = 1;
-        // } else {
-        //     $totalStudents = Student::whereNull('deleted_at')->count();
-        //     $totalClasses = ClassList::count();
-        //     $totalTeachers = Admin::where('user_type', 'Teacher')->count(); 
-        // }
-        return view('content.dashboard.dashboards-analytics', compact('user'));
+            $totalSlots = SlotBooking::whereDate('slot_date', $date)->count();
+        } else {
+            // no filter = count everything
+            $totalClients = SlotBooking::distinct('client_id')->count('client_id');
+            $totalDistributors = SlotBooking::distinct('distributor_name')->count('distributor_name');
+            $totalSlots = SlotBooking::count();
+        }
+
+        return view('content.dashboard.dashboards-analytics', compact('totalClients', 'totalDistributors', 'totalSlots', 'slotDates'
+        ));
     }
 
-    // public function getStudentAdmissionChartData() {
-    //     $user = Auth::guard('admin')->user();
 
-    //     // Base query
-    //     $query = StudentAdmission::with('session');
-
-    //     if ($user->user_type === 'Teacher') {
-    //         // Limit data to teacher's assigned classes
-    //         $assignedClassIds = TeacherClass::where('teacher_id', $user->id)
-    //             ->pluck('class_id')
-    //             ->unique()
-    //             ->toArray();
-
-    //         $query->whereIn('class_id', $assignedClassIds);
-    //     }
-
-    //     $admissions = $query->get();
-    //     $grouped = $admissions->groupBy('session_id');
-
-    //     $admissionData = $grouped->map(function ($item, $sessionId) {
-    //         $sessionName = optional($item->first()->session)->session_name ?? 'Unknown';
-    //         return [
-    //             'session_name' => $sessionName,
-    //             'total' => $item->count()
-    //         ];
-    //     })->sortBy('session_name')->values();
-
-    //     return response()->json([
-    //         'labels' => $admissionData->pluck('session_name'),
-    //         'data' => $admissionData->pluck('total'),
-    //     ]);
-    // }
+    
 }

@@ -6,7 +6,7 @@
       {{--<span class="app-brand-logo demo me-1">
             @include('_partials.macros',["height"=>20])
             </span> --}}
-      <img src="{{asset('assets/img/logo-tm.png')}}" alt="" style="width: 60px; height: auto;">
+      <img src="{{asset('assets/img/tm-icon.jpg')}}" alt="logo" style="width: 60px; height: 50px; object-fit: cover;">
       <span class="app-brand-text demo menu-text fw-semibold ms-2">Sales Drive</span>
     </a>
 
@@ -36,16 +36,15 @@
         </a>
         <ul class="menu-sub">
           
-          <li class="menu-item {{ (request()->is('admin/master-module/clients')) ? 'open' : '' }}">
+          <li class="menu-item {{ (request()->is('admin/master-module/clients')) ? 'active' : '' }}">
             <a href="{{route('admin.client.list')}}" class="menu-link">
               <div>Client Management</div>
             </a>
           </li>
           
         </ul>
-          <ul class="menu-sub">
-          
-          <li class="menu-item {{ (request()->is('admin/master-module')) ? 'open' : '' }}">
+          <ul class="menu-sub">      
+          <li class="menu-item {{ (request()->is('admin/master-module/distributor-list')) ? 'active' : '' }}">
             <a href="{{route('admin.slot-booking.distributorList')}}" class="menu-link">
               <div>Distributor List</div>
             </a>

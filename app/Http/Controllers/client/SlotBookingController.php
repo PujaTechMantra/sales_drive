@@ -12,26 +12,26 @@ class SlotBookingController extends Controller
 {
     //
     public function index() {
-        $client = Auth::guard('client')->user();
+        $client             = Auth::guard('client')->user();
         $required_day_slots = RequiredDaySlot::select('day', 'slot')->get();
-        $available_day = $required_day_slots->pluck('day')->toArray();
+        $available_day      = $required_day_slots->pluck('day')->toArray();
         return view('client.slotBooking.index', compact('client','available_day'));
     }
 
     public function checkSlot(Request $request)
     {
-        $slotDate = Carbon::parse($request->slot_date);
+        $slotDate   = Carbon::parse($request->slot_date);
 
         // Fetch allowed days and slots
-        $rules = RequiredDaySlot::all();
-        $dayName = strtolower($slotDate->format('l'));
+        $rules      = RequiredDaySlot::all();
+        $dayName    = strtolower($slotDate->format('l'));
 
         $rule = $rules->firstWhere('day', $dayName);
 
         if (!$rule) {
             return response()->json([
-                'status' => false,
-                'message' => 'This day is not available for booking'
+                'status'    => false,
+                'message'   => 'This day is not available for booking'
             ]);
         }
 
