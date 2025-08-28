@@ -92,34 +92,146 @@
         });
     });
 
+    // $(document).ready(function(){
+    //     let maxSlots = 0;
+    //     let bookedCount = 0;
+    //     let currentAdded = 0;
+    //     // Check slot availability
+    //     $('#slot_date').on('change', function () {
+    //         let slot_date = $(this).val();
+    //         if (slot_date) {
+    //             $.post("{{ route('client.slot-booking.checkSlot') }}", {
+    //                 _token: "{{ csrf_token() }}",
+    //                 slot_date: slot_date
+    //             }, function(res){
+    //                 if (res.status) {
+    //                     $("#slot_msg").removeClass('text-danger').addClass('text-success').text(res.message);
+    //                     $("#distributorContainer").show();
+    //                     $("#addDistributor").show();
+
+    //                     // get available slot count from backend
+    //                     maxSlots = res.slots; 
+    //                     bookedCount = res.booked ?? 0; 
+    //                     currentAdded = 1; 
+    //                 } else {
+    //                     $("#slot_msg").removeClass('text-success').addClass('text-danger').text(res.message);
+    //                     $("#distributorContainer").hide();
+    //                     $("#addDistributor").hide();
+    //                 }
+    //             });
+    //         }
+    //     });
+
+    //     $('#addDistributor').on('click', function(){
+    //         if (currentAdded + bookedCount >= maxSlots) {
+    //             $("#slot_msg").removeClass('text-success').addClass('text-danger')
+    //                 .text("All slots are full for this date.");
+    //             return;
+    //         }
+
+    //         let newSection = $('.distributor-section:first').clone();
+    //         newSection.find("input").val(""); // clear inputs
+    //         $('#distributorContainer').append(newSection);
+
+    //         currentAdded++;
+    //     });
+
+    //     $(document).on('click', '.removeDistributor', function() {
+    //         $(this).closest('.distributor-section').remove();
+    //         currentAdded--;
+    //     })
+
+    //     // Submit booking
+    //     $('#submitBooking').on('click', function(){
+
+    //         let slot_date = $("#slot_date").val();
+
+    //         if (!slot_date) {
+    //             $("#slot_msg")
+    //                 .removeClass('text-success')
+    //                 .addClass('text-danger')
+    //                 .text("Please select the date before booking.");
+    //             return; // stop submission
+    //         }
+    //         let formData = $("#slotForm").serialize();
+
+    //         $.ajax({
+    //             url: "{{ route('client.slot-booking.store') }}",
+    //             type: "POST",
+    //             data: formData,
+    //             success: function(res){
+    //                 if(res.status){
+    //                     toastFire('success',res.message);
+    //                     location.reload();
+    //                 } else {
+    //                     toastFire('error',res.message);
+    //                 }
+    //             },
+              
+    //             error: function(xhr){
+    //                 if(xhr.status === 422){ // Laravel validation error
+    //                     $('.text-danger').remove(); 
+
+    //                     $.each(xhr.responseJSON.errors, function(field, messages){
+    //                         // Convert "distributor_name.0" → "distributor_name[]"
+    //                         let fieldName = field.replace(/\.\d+$/, '[]');
+    //                         let input = $("[name='" + fieldName + "']");
+
+    //                         // If multiple inputs (arrays), pick the correct one
+    //                         if(field.match(/\.\d+$/)){
+    //                             let index = field.match(/\d+$/)[0];
+    //                             input = $("[name='" + fieldName + "']").eq(index);
+    //                         }
+
+    //                         input.after('<p class="text-danger small">'+messages[0]+'</p>');
+    //                     });
+    //                 }
+    //             }
+
+    //         });
+    //     });
+
+    // });      
+
     $(document).ready(function(){
         let maxSlots = 0;
         let bookedCount = 0;
         let currentAdded = 0;
-        // Check slot availability
+        let slotInterval = null;
+
+        function checkSlotAvailability(slot_date){
+            $.post("{{ route('client.slot-booking.checkSlot') }}", {
+                _token: "{{ csrf_token() }}",
+                slot_date: slot_date
+            }, function(res){
+                if (res.status) {
+                    $("#slot_msg").removeClass('text-danger').addClass('text-success')
+                        .text(res.message + " ("+(res.booked)+"/"+res.slots+" booked)");
+                    $("#distributorContainer").show();
+                    $("#addDistributor").show();
+                    maxSlots = res.slots; 
+                    bookedCount = res.booked ?? 0; 
+                } else {
+                    $("#slot_msg").removeClass('text-success').addClass('text-danger').text(res.message);
+                    $("#distributorContainer").hide();
+                    $("#addDistributor").hide();
+                }
+            });
+        }
+
+        // When date is selected
         $('#slot_date').on('change', function () {
             let slot_date = $(this).val();
-            if (slot_date) {
-                $.post("{{ route('client.slot-booking.checkSlot') }}", {
-                    _token: "{{ csrf_token() }}",
-                    slot_date: slot_date
-                }, function(res){
-                    if (res.status) {
-                        $("#slot_msg").removeClass('text-danger').addClass('text-success').text(res.message);
-                        $("#distributorContainer").show();
-                        $("#addDistributor").show();
+            if (!slot_date) return;
+  
+            if (slotInterval) clearInterval(slotInterval); // clear any previous interval
 
-                        // get available slot count from backend
-                        maxSlots = res.slots; 
-                        bookedCount = res.booked ?? 0; 
-                        currentAdded = 1; 
-                    } else {
-                        $("#slot_msg").removeClass('text-success').addClass('text-danger').text(res.message);
-                        $("#distributorContainer").hide();
-                        $("#addDistributor").hide();
-                    }
-                });
-            }
+            checkSlotAvailability(slot_date);  // run once immediately
+
+            // keep checking every 30s
+            slotInterval = setInterval(function(){
+                checkSlotAvailability(slot_date);
+            }, 30000);
         });
 
         $('#addDistributor').on('click', function(){
@@ -128,33 +240,28 @@
                     .text("All slots are full for this date.");
                 return;
             }
-
             let newSection = $('.distributor-section:first').clone();
-            newSection.find("input").val(""); // clear inputs
+            newSection.find("input").val(""); 
             $('#distributorContainer').append(newSection);
-
             currentAdded++;
         });
 
         $(document).on('click', '.removeDistributor', function() {
             $(this).closest('.distributor-section').remove();
             currentAdded--;
-        })
+        });
 
-        // Submit booking
         $('#submitBooking').on('click', function(){
+            if (slotInterval) clearInterval(slotInterval); // stop checking once user submits
 
             let slot_date = $("#slot_date").val();
-
             if (!slot_date) {
-                $("#slot_msg")
-                    .removeClass('text-success')
-                    .addClass('text-danger')
+                $("#slot_msg").removeClass('text-success').addClass('text-danger')
                     .text("Please select the date before booking.");
-                return; // stop submission
+                return;
             }
-            let formData = $("#slotForm").serialize();
 
+            let formData = $("#slotForm").serialize();
             $.ajax({
                 url: "{{ route('client.slot-booking.store') }}",
                 type: "POST",
@@ -167,30 +274,24 @@
                         toastFire('error',res.message);
                     }
                 },
-              
                 error: function(xhr){
-                    if(xhr.status === 422){ // Laravel validation error
+                    if(xhr.status === 422){ 
                         $('.text-danger').remove(); 
-
                         $.each(xhr.responseJSON.errors, function(field, messages){
-                            // Convert "distributor_name.0" → "distributor_name[]"
                             let fieldName = field.replace(/\.\d+$/, '[]');
                             let input = $("[name='" + fieldName + "']");
-
-                            // If multiple inputs (arrays), pick the correct one
                             if(field.match(/\.\d+$/)){
                                 let index = field.match(/\d+$/)[0];
                                 input = $("[name='" + fieldName + "']").eq(index);
                             }
-
                             input.after('<p class="text-danger small">'+messages[0]+'</p>');
                         });
                     }
                 }
-
             });
         });
 
-    });      
+    });
+
 </script>
 @endsection

@@ -38,8 +38,8 @@ class SlotBookingController extends Controller
         // Must book 24 hours before 10am
         if ($slotDate->copy()->setTime(10, 0, 0)->subDay()->isPast()) {
             return response()->json([
-                'status' => false,
-                'message' => 'Booking must be done at least 24 hours before the slot'
+                'status'    => false,
+                'message'   => 'Booking must be done at least 24 hours before the slot'
             ]);
         }
 
