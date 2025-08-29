@@ -8,7 +8,7 @@ class SlotBooking extends Model
 {
     //
     protected $fillable = ['client_id', 'distributor_name', 'distributor_address', 'distributor_contact_no', 
-    'distributor_email', 'slot_date'];
+    'distributor_email', 'slot_date', 'status', 'remarks'];
 
     public function user()
     {

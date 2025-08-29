@@ -129,7 +129,7 @@ class SlotBookingController extends Controller
         $slotDates = SlotBooking::where('client_id', $clientId)
                                         ->select('slot_date')
                                         ->distinct()
-                                        ->orderBy('slot_date', 'desc')
+                                        ->orderBy('id', 'desc')
                                         ->pluck('slot_date');
 
         $query = SlotBooking::where('client_id', $clientId);
@@ -138,7 +138,7 @@ class SlotBookingController extends Controller
             $query->whereDate('slot_date', $request->slot_date);
         }
 
-        $distributor = $query->get();
+        $distributor = $query->orderBy('id', 'desc')->get();
         return view('client.slotBooking.list', compact('distributor', 'slotDates'));
     }
 

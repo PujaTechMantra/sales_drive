@@ -47,6 +47,8 @@
                         <th>Distributor Contact No</th>
                         <th>Distributor Email</th>
                         <th>Slot Date</th>
+                        <th>Site Ready</th>
+                        <th>Remarks</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,6 +60,14 @@
                             <td>{{ $d->distributor_contact_no }}</td>
                             <td>{{ $d->distributor_email }}</td>
                             <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
+                            <td>
+                                @if($d->site_ready == 1)
+                                    <span class="badge bg-success rounded-pill px-3 py-2">YES</span>
+                                @else
+                                    <span class="badge bg-danger rounded-pill px-3 py-2">NO</span>
+                                @endif
+                            </td>
+                            <td>{{ ucwords($d->remarks) }}</td>
                         </tr>
                     @empty
                         <tr>

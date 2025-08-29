@@ -211,6 +211,7 @@
                     $("#addDistributor").show();
                     maxSlots = res.slots; 
                     bookedCount = res.booked ?? 0; 
+                    currentAdded = 1;
                 } else {
                     $("#slot_msg").removeClass('text-success').addClass('text-danger').text(res.message);
                     $("#distributorContainer").hide();

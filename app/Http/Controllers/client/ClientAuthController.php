@@ -22,7 +22,14 @@ class ClientAuthController extends Controller
             'password'  => 'required|string',
         ]);
 
-        if (Auth::guard('client')->attempt($request->only('email', 'password'))) {
+        // if (Auth::guard('client')->attempt($request->only('email', 'password'))) {
+        //     return redirect()->route('client.dashboard');
+        // }
+        if(Auth::guard('client')->attempt([
+            'email'     => $request->email,
+            'password'  => $request->password,
+            'status'    => 1
+        ])) {
             return redirect()->route('client.dashboard');
         }
 

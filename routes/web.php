@@ -146,6 +146,8 @@ Route::prefix('admin')->group(function () {
                 Route::post('/update', [ClientListController::class, 'update'])->name('admin.client.update');
                 Route::get('/status/{id}', [ClientListController::class, 'status'])->name('admin.client.status');
                 Route::post('/delete', [ClientListController::class, 'delete'])->name('admin.client.delete');
+                Route::get('/site_ready/{id}', [ClientListController::class, 'siteReady'])->name('admin.client.siteReady');
+                Route::post('/save-remarks', [ClientListController::class, 'saveRemarks'])->name('admin.client.saveRemarks');
             });
         //master module/distributor
             Route::get('/distributor-list', [ClientListController::class, 'distributorList'])->name('admin.slot-booking.distributorList');

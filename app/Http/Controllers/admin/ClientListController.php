@@ -98,7 +98,7 @@ class ClientListController extends Controller
     public function distributorList(Request $request) {
         $slotDates = SlotBooking::select('slot_date') 
                                     ->distinct()
-                                    ->orderBy('slot_date', 'desc')
+                                    ->orderBy('id', 'desc')
                                     ->pluck('slot_date');
 
         // $query = SlotBooking::query();
@@ -117,7 +117,29 @@ class ClientListController extends Controller
             });
         }
 
-        $distributor = $query->get();
+        $distributor = $query->orderBy('id', 'desc')->get();
         return view('admin.distributor.list', compact('distributor', 'slotDates'));
+    }
+
+    public function siteReady($id) {
+        $site = SlotBooking::findOrFail($id);
+        $site->site_ready = $site->site_ready ? 0 : 1;
+        $site->save();
+        $site->response->json([
+            'status'    => 200,
+            'message'   => 'status changed'
+        ]);
+    }
+    
+    public function saveRemarks(Request $request){
+        $request->validate([
+            'remarks'   => 'nullable|string|max:1000',
+        ]);
+
+        $slot = SlotBooking::findOrFail($request->id);
+        $slot->remarks = $request->remarks;
+        $slot->save();
+
+        return redirect()->back()->with('sucess', 'remarks added successfully');
     }
 }
