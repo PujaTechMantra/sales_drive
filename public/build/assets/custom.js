@@ -31,3 +31,18 @@ function statusToggle(route) {
         }
     });
 }
+
+//for site ready toggle
+function statusSiteReadyToggle(route) {
+    $.ajax({
+        url: route,
+        success: function(resp) {
+            if( resp.status == 200){
+                toastFire('success', resp.message);
+                location.reload();
+            } else{
+                toastFire('error', resp.message);
+            }
+        }
+    });
+}

@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::table('slot_bookings', function (Blueprint $table) {
             //
-            $table->text('remarks')->nullable()->after('distributor_email');
+            $table->tinyInteger('training_done')->default(1)->comment('1: active | 0: inactive')->after('site_ready');
+            $table->text('training_remarks')->nullable()->after('remarks');
         });
     }
 
@@ -25,7 +26,7 @@ return new class extends Migration
         Schema::table('slot_bookings', function (Blueprint $table) {
             //
             $table->dropColumn([
-                'remarks'
+                'training_done', 'training_remarks'
             ]);
         });
     }

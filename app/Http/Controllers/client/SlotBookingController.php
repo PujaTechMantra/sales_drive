@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
-use App\Models\{SlotBooking, RequiredDaySlot};
+use App\Models\{SlotBooking, RequiredDaySlot, User};
 
 class SlotBookingController extends Controller
 {
@@ -132,13 +132,13 @@ class SlotBookingController extends Controller
                                         ->orderBy('id', 'desc')
                                         ->pluck('slot_date');
 
-        $query = SlotBooking::where('client_id', $clientId);
+        $query = SlotBooking::with('user')->where('client_id', $clientId);
 
         if ($request->has('slot_date') && $request->slot_date != '') {
             $query->whereDate('slot_date', $request->slot_date);
         }
 
-        $distributor = $query->orderBy('id', 'desc')->get();
+        $distributor = $query->orderBy('id', 'desc')->paginate(20);
         return view('client.slotBooking.list', compact('distributor', 'slotDates'));
     }
 

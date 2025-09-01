@@ -95,6 +95,17 @@ class ClientListController extends Controller
         ]);
     }
 
+    public function trainingStatus($id) {
+        $user = User::findOrFail($id);
+
+        $user->training_status = $user->training_status ? 0 : 1;
+        $user->save();
+        return response()->json([
+            'status'    => 200,
+            'message'   => 'Training status updated successfully'
+        ]);
+    }
+
     public function distributorList(Request $request) {
         $slotDates = SlotBooking::select('slot_date') 
                                     ->distinct()
@@ -117,7 +128,7 @@ class ClientListController extends Controller
             });
         }
 
-        $distributor = $query->orderBy('id', 'desc')->get();
+        $distributor = $query->orderBy('id', 'desc')->paginate(20);
         return view('admin.distributor.list', compact('distributor', 'slotDates'));
     }
 
@@ -125,9 +136,9 @@ class ClientListController extends Controller
         $site = SlotBooking::findOrFail($id);
         $site->site_ready = $site->site_ready ? 0 : 1;
         $site->save();
-        $site->response->json([
+        return response()->json([
             'status'    => 200,
-            'message'   => 'status changed'
+            'message'   => 'Status changed for site ready'
         ]);
     }
     
@@ -140,6 +151,56 @@ class ClientListController extends Controller
         $slot->remarks = $request->remarks;
         $slot->save();
 
-        return redirect()->back()->with('sucess', 'remarks added successfully');
+        return redirect()->back()->with('sucess', 'Remarks added successfully');
     }
+
+    // public function trainingList(Request $request) {
+    //     $slotDates = SlotBooking::select('slot_date') 
+    //                                 ->distinct()
+    //                                 ->orderBy('id', 'desc')
+    //                                 ->pluck('slot_date');
+
+    //     // $query = SlotBooking::query();
+    //     $query = SlotBooking::with('user');
+
+    //     if ($request->filled('slot_date')) {
+    //         $query->whereDate('slot_date', $request->slot_date);
+    //     }
+
+    //     //filter by client keyword
+    //     if($request->filled('keyword')) {
+    //         $keyword = $request->keyword;
+    //         $query->whereHas('user', function($q) use ($keyword) {
+    //                 $q->where('name', 'like', "%{$keyword}%")
+    //                     ->orWhere('distributor_name', 'like', "%{$keyword}%");
+    //         });
+    //     }
+
+    //     $distributor = $query->orderBy('id', 'desc')->get();
+    //     return view('admin.training.list', compact('distributor', 'slotDates'));
+    // }
+
+    public function trainingDone($id) {
+        $training = SlotBooking::findOrFail($id);
+        $training->training_done = $training->training_done ? 0 : 1;
+        $training->save();
+        return response()->json([
+            'status'    => 200,
+            'message'   => 'Training status changed'
+        ]);
+    }
+
+    public function saveRemarksTraining(Request $request) {
+        //dd($request->all());
+        $request->validate([
+            'training_remarks'  => 'nullable|string|max:1000',
+        ]);
+            $training = SlotBooking::findOrFail($request->id);
+            $training->training_remarks = $request->training_remarks;
+            $training->save();
+
+            return redirect()->route('admin.slot-booking.distributorList')->with('success', 'Training remarks added successfully');    
+    }
+
+  
 }

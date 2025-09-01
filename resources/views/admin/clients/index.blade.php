@@ -28,12 +28,12 @@
                             </div>
                             <div class="form-group mb-0">
                                 <div class="btn-group">
-                                <button type="submit" class="btn btn-sm btn-primary">
-                                    <i class=" tf-icons ri-filter-3-line"></i>
-                                </button>
-                                <a href="{{ url()->current() }}" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Clear filter">
-                                    <i class=" tf-icons ri-close-line"></i>
-                                </a>
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class=" tf-icons ri-filter-3-line"></i>
+                                    </button>
+                                    <a href="{{ url()->current() }}" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Clear filter">
+                                        <i class=" tf-icons ri-close-line"></i>
+                                    </a>
                             
                                 </div>
                             </div>
@@ -54,6 +54,7 @@
                             <th>Address</th>
                             <th>Status</th>
                             <th>Actions</th>
+                            <th>Training status</th>
                         </tr>
                     </thead>
                     <tbody id="clientTableBody">
@@ -77,6 +78,13 @@
                                         data-bs-toggle="tooltip" title="Delete">
                                         <i class="ri-delete-bin-6-line"></i>
                                     </a>
+                                </td>
+                                <td>
+                                    <div class="form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
+                                        <input class="form-check-input ms-auto" type="checkbox" id="customSwitch1{{$item->id}}"
+                                        {{ $item->training_status ? 'checked' : ''}} onclick="statusToggle('{{route('admin.client.trainingStatus', $item->id)}}', this)">
+                                        <label class="form-check-label" for="customSwitch{{$item->id}}"></label>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

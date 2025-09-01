@@ -18,19 +18,19 @@
         </a>
       </li>
 
-      <li class="menu-item {{ (request()->is('user/slot-booking*')) ? 'open' : '' }}">
+      <li class="menu-item {{ (request()->is('user/master-module*')) ? 'open' : '' }}">
         <a href="javascript:void(0)" class="menu-link menu-toggle waves-effect">
           <i class="menu-icon fa-solid fa-house"></i>
-          <div>Slot Booking</div>
+          <div>Master Module</div>
         </a>
         <ul class="menu-sub"> 
-          <li class="menu-item {{ (request()->is('user/slot-booking/form')) ? 'active' : '' }}">
+          <li class="menu-item {{ (request()->is('user/master-module/slot-booking-form')) ? 'active' : '' }}">
             <a href="{{route('client.slot-booking.index')}}" class="menu-link">
               <div>Slot Booking Form</div>
             </a>
           </li>   
         
-          <li class="menu-item {{ (request()->is('user/slot-booking/list')) ? 'active' : '' }}">
+          <li class="menu-item {{ (request()->is('user/master-module/distributor-list')) ? 'active' : '' }}">
             <a href="{{ route('client.slot-booking.distributorList')}}" class="menu-link">
               <div>Distributor List</div>
             </a>

@@ -40,17 +40,16 @@
             <a href="{{route('admin.client.list')}}" class="menu-link">
               <div>Client Management</div>
             </a>
-          </li>
-          
+          </li>   
         </ul>
-          <ul class="menu-sub">      
+        <ul class="menu-sub">      
           <li class="menu-item {{ (request()->is('admin/master-module/distributor-list')) ? 'active' : '' }}">
             <a href="{{route('admin.slot-booking.distributorList')}}" class="menu-link">
               <div>Distributor List</div>
             </a>
-          </li>
-          
+          </li> 
         </ul>
+        
       </li>
 
     

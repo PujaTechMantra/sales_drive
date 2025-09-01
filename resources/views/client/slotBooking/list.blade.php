@@ -4,6 +4,33 @@
 
 @section('content')
 
+
+<style>
+    /* Remove default background color of switch */
+    .form-check-input:checked {
+        background-color: #198754 !important; /* optional green color */
+        border-color: #198754 !important;
+    }
+    .form-check-input:not(:checked) {
+        background-color: #dc3545 !important; /* optional red color */
+        border-color: #dc3545 !important;
+    }
+
+    /* Show YES / NO text */
+    .form-check-label::after {
+        margin-left: 8px;
+        font-weight: bold;
+    }
+    .form-check-input:checked + .form-check-label::after {
+        content: "YES";
+        color: green;
+    }
+    .form-check-input:not(:checked) + .form-check-label::after {
+        content: "NO";
+        color: red;
+    }
+</style>
+
 <div class="container">
     <div class="card">
         <div class="card-header">
@@ -33,7 +60,6 @@
                                 <i class="tf-icons ri-close-line"></i>
                             </a>
                         </div>
-
                     </div>
 
                 </div>
@@ -48,7 +74,7 @@
                         <th>Distributor Email</th>
                         <th>Slot Date</th>
                         <th>Site Ready</th>
-                        <th>Remarks</th>
+                        <th>Training Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -66,8 +92,33 @@
                                 @else
                                     <span class="badge bg-danger rounded-pill px-3 py-2">NO</span>
                                 @endif
+
+                                <button type="button" class="btn btn-sm btn-outline-primary rounded-circle viewRemarksBtn"
+                                    data-bs-toggle="modal" data-bs-target="#remarksModal"
+                                    data-remarks="{{ $d->remarks}}" title="Remarks"><i class="ri-eye-line ri-15px"></i>
+                                </button>
                             </td>
-                            <td>{{ ucwords($d->remarks) }}</td>
+                            <td>
+                                @if($d->user && $d->user->training_status == 0)
+                                    <span class="badge bg-danger rounded-pill px-3 py-2">NO</span>
+                                @else
+                                    @if($d->site_ready)
+                                        <div class="form-check form-switch" data-bs-toggle="tooltip">
+                                            <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
+                                                {{ $d->site_ready ? 'checked' : '' }}
+                                                onclick="statusToggle('{{route('client.trainingDone', $d->id)}}', this)">
+                                            <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
+                                        </div>
+                                        
+                                        <button type="button" class="badge rounded-pill bg-secondary" 
+                                                data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
+                                                data-remarks="{{ $d->training_remarks }}">Training Remarks
+                                        </button>
+                                    @else
+                                        <h8>Waiting for site ready...</h8>                                        
+                                    @endif
+                                @endif
+                            </td>
                         </tr>
                     @empty
                         <tr>
@@ -76,7 +127,49 @@
                     @endforelse
                 </tbody>
             </table>
+            {{ $distributor->links() }}
         </div>
+
+        {{-- site ready remarks modal --}}
+        <div class="modal fade" id="remarksModal" tabindex="-1" aria-labelledby="remarksModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="remarksModalLabel">Remarks</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="remarksText" class="text-muted"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+         <!-- Training Remarks Modal -->
+        <div class="modal fade" id="remarksTrainingModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="{{ route('client.saveRemarksTraining') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="id" id="training_slot_id">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add / Update Training Remarks</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <textarea name="training_remarks" id="training_remarks_text" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
     </div>
 </div>
 @endsection
@@ -86,6 +179,31 @@
         $('#slot_date').select2({
             placeholder: "Select a slot date",
             allowClear: true
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const remarksModal = document.getElementById('remarksModal');
+        const remarksText = document.getElementById('remarksText');
+
+        document.querySelectorAll('.viewRemarksBtn').forEach(button => {
+            button.addEventListener('click', function() {
+                let remarks = this.getAttribute('data-remarks');
+                remarksText.textContent = remarks ? remarks : 'No Reamrks available.';
+            })
+        })
+    })
+
+    //training remarks modal
+    document.addEventListener("DOMContentLoaded", function () {
+        var remarksTrainingModal = document.getElementById('remarksTrainingModal');
+        remarksTrainingModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var trainingSlotId = button.getAttribute('data-id');
+            var trainingRemarks = button.getAttribute('data-remarks');
+
+            document.getElementById('training_slot_id').value = trainingSlotId;
+            document.getElementById('training_remarks_text').value = trainingRemarks ? trainingRemarks : '';
         });
     });
 </script>

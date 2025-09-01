@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 //New Route
 use App\Http\Controllers\Auth\AdminAuthController;
 use App\Http\Controllers\admin\{UserListController, ClientListController};
-use App\Http\Controllers\client\{ClientAuthController, SlotBookingController};
+use App\Http\Controllers\client\{ClientAuthController, SlotBookingController, TrainingController};
 
 //End New Route
 
@@ -145,12 +145,18 @@ Route::prefix('admin')->group(function () {
                 Route::get('/edit/{id}', [ClientListController::class, 'edit'])->name('admin.client.edit');
                 Route::post('/update', [ClientListController::class, 'update'])->name('admin.client.update');
                 Route::get('/status/{id}', [ClientListController::class, 'status'])->name('admin.client.status');
-                Route::post('/delete', [ClientListController::class, 'delete'])->name('admin.client.delete');
-                Route::get('/site_ready/{id}', [ClientListController::class, 'siteReady'])->name('admin.client.siteReady');
-                Route::post('/save-remarks', [ClientListController::class, 'saveRemarks'])->name('admin.client.saveRemarks');
+                Route::post('/delete', [ClientListController::class, 'delete'])->name('admin.client.delete'); 
+                Route::get('/training-status/{id}', [ClientListController::class, 'trainingStatus'])->name('admin.client.trainingStatus');
             });
-        //master module/distributor
+            //master module/distributor, site ready, remarks
             Route::get('/distributor-list', [ClientListController::class, 'distributorList'])->name('admin.slot-booking.distributorList');
+            Route::get('/site-ready/{id}', [ClientListController::class, 'siteReady'])->name('admin.client.siteReady');
+            Route::post('/save-remarks', [ClientListController::class, 'saveRemarks'])->name('admin.client.saveRemarks');
+
+            //master module/distributor, training, remarks
+            // Route::get('/training', [ClientListController::class, 'trainingList'])->name('admin.slot-booking.trainingList');
+            Route::get('training-done/{id}', [ClientListController::class, 'trainingDone'])->name('admin.client.trainingDone');
+            Route::post('/save-remarks-training', [ClientListController::class, 'saveRemarksTraining'])->name('admin.client.saveRemarksTraining');
         });
     });
 });
@@ -168,11 +174,14 @@ Route::middleware(['client', 'prevent-back-history'])->prefix('user')->group(fun
         return view('client.dashboard');
     })->name('client.dashboard');
 
-    Route::prefix('slot-booking')->group(function() {
-        Route::get('/form', [SlotBookingController::class, 'index'])->name('client.slot-booking.index');
+    Route::prefix('master-module')->group(function() {
+        Route::get('/slot-booking-form', [SlotBookingController::class, 'index'])->name('client.slot-booking.index');
         Route::post('/form/check-slot', [SlotBookingController::class, 'checkSlot'])->name('client.slot-booking.checkSlot');
         Route::post('/form/store', [SlotBookingController::class, 'store'])->name('client.slot-booking.store');
         Route::get('/form/available-date', [SlotBookingController::class, 'getAvailableDates'])->name('client.slot-booking.getAvailableDates');
-        Route::get('/list', [SlotBookingController::class, 'distributorList'])->name('client.slot-booking.distributorList');
+        Route::get('/distributor-list', [SlotBookingController::class, 'distributorList'])->name('client.slot-booking.distributorList');
+
+        Route::get('training-done/{id}', [TrainingController::class, 'trainingDone'])->name('client.trainingDone');
+        Route::post('/save-remarks-training', [TrainingController::class, 'saveRemarksTraining'])->name('client.saveRemarksTraining');
     });
 });

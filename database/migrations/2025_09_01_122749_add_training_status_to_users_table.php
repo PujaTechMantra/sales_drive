@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('slot_bookings', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
-            $table->text('remarks')->nullable()->after('distributor_email');
+            $table->tinyInteger('training_status')->default(0)->comment('1: active | 0: inactive')->after('status');
         });
     }
 
@@ -22,10 +22,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('slot_bookings', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             //
             $table->dropColumn([
-                'remarks'
+                'training_status'
             ]);
         });
     }

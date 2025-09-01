@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Distributor list')
+@section('title', 'Training')
 
 @section('content')
 <style>
@@ -34,14 +34,13 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 @endif
-
 <div class="container">
     <div class="card">
         <div class="card-header">
-            <h3>Distributor List</h3>
+            <h3>Training List</h3>
         </div>
         <div class="card-body">
-            <form method="GET" action="{{ route('admin.slot-booking.distributorList') }}">
+            <form method="GET" action="{{ route('admin.slot-booking.trainingList') }}">
                 <div class="row mb-3">
                     
                     <div class="d-flex justify-content-between align-items-center mb-3">
@@ -82,8 +81,7 @@
                         <th>Distributor Contact No</th>
                         <th>Distributor Email</th>
                         <th>Slot Date</th>
-                        <th>Site Ready</th>
-                        <th>Training Status</th>
+                        <th>Training Done</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -97,32 +95,16 @@
                             <td>{{ $d->distributor_email }}</td>
                             <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
                             <td>
-                                <div class="form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
+                                <div class="form-check form-switch" data-bs-toggle="tooltip">
                                     <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
                                         {{ $d->site_ready ? 'checked' : '' }}
-                                        onclick="statusSiteReadyToggle('{{route('admin.client.siteReady', $d->id)}}', this)">
+                                        onclick="statusToggle('{{route('admin.client.trainingDone', $d->id)}}', this)">
                                     <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
-                                </div>                            
+                                </div>
+                                
                                 <button type="button" class="badge rounded-pill bg-secondary" 
-                                        data-bs-toggle="modal" data-bs-target="#remarksModal" data-id="{{ $d->id }}"
-                                        data-remarks="{{ $d->remarks }}">Remarks</button>
-                            </td>
-                            <td>
-                                @if($d->site_ready)
-                                    <div class="form-check form-switch" data-bs-toggle="tooltip">
-                                        <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
-                                            {{ $d->site_ready ? 'checked' : '' }}
-                                            onclick="statusToggle('{{route('admin.client.trainingDone', $d->id)}}', this)">
-                                        <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
-                                    </div>
-                                    
-                                    <button type="button" class="badge rounded-pill bg-secondary" 
-                                            data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
-                                            data-remarks="{{ $d->training_remarks }}">Training Remarks
-                                    </button>
-                                @else
-                                    {{-- keep blank --}}
-                                @endif
+                                        data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
+                                        data-remarks="{{ $d->training_remarks }}">Remarks</button>
                             </td>
                         </tr>
                     @empty
@@ -132,22 +114,21 @@
                     @endforelse
                 </tbody>
             </table>
-            {{ $distributor->links() }}
         </div>
        
-        <!-- Site ready Remarks Modal -->
-        <div class="modal fade" id="remarksModal" tabindex="-1" aria-hidden="true">
+        <!-- Training Remarks Modal -->
+        <div class="modal fade" id="remarksTrainingModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
-                <form action="{{ route('admin.client.saveRemarks') }}" method="POST">
+                <form action="{{ route('admin.client.saveRemarksTraining') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="id" id="slot_id"> 
+                    <input type="hidden" name="id" id="slot_id">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title">Add / Update Remarks</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <div class="modal-body">
-                            <textarea name="remarks" id="remarks_text" class="form-control" rows="4"></textarea>
+                            <textarea name="training_remarks" id="remarks_text" class="form-control" rows="4"></textarea>
                         </div>
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Save</button>
@@ -157,27 +138,6 @@
             </div>
         </div>
 
-        <!-- Training Remarks Modal -->
-        <div class="modal fade" id="remarksTrainingModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="{{ route('admin.client.saveRemarksTraining') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="id" id="training_slot_id">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Add / Update Training Remarks</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                        </div>
-                        <div class="modal-body">
-                            <textarea name="training_remarks" id="training_remarks_text" class="form-control" rows="4"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
 
     </div>
 </div>
@@ -191,29 +151,15 @@
         });
     });
 
-    //site ready remarks modal   
     document.addEventListener("DOMContentLoaded", function () {
-        var remarksModal = document.getElementById('remarksModal');
-        remarksModal.addEventListener('show.bs.modal', function (event) {
+        var remarksTrainingModal = document.getElementById('remarksTrainingModal');
+        remarksTrainingModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
             var slotId = button.getAttribute('data-id');
             var remarks = button.getAttribute('data-remarks');
 
             document.getElementById('slot_id').value = slotId;
             document.getElementById('remarks_text').value = remarks ? remarks : '';
-        });
-    });
-
-    //training remarks modal
-    document.addEventListener("DOMContentLoaded", function () {
-        var remarksTrainingModal = document.getElementById('remarksTrainingModal');
-        remarksTrainingModal.addEventListener('show.bs.modal', function (event) {
-            var button = event.relatedTarget;
-            var trainingSlotId = button.getAttribute('data-id');
-            var trainingRemarks = button.getAttribute('data-remarks');
-
-            document.getElementById('training_slot_id').value = trainingSlotId;
-            document.getElementById('training_remarks_text').value = trainingRemarks ? trainingRemarks : '';
         });
     });
 </script>
