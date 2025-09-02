@@ -141,20 +141,19 @@ Route::prefix('admin')->group(function () {
             Route::prefix('clients')->group(function() {
                 Route::get('/', [ClientListController::Class, 'index'])->name('admin.client.list');
                 Route::post('/store', [ClientListController::class, 'store'])->name('admin.client.store');
-                //Route::get('/show/{id}', [ClientListController::class, 'show'])->name('admin.client.show');
                 Route::get('/edit/{id}', [ClientListController::class, 'edit'])->name('admin.client.edit');
                 Route::post('/update', [ClientListController::class, 'update'])->name('admin.client.update');
                 Route::get('/status/{id}', [ClientListController::class, 'status'])->name('admin.client.status');
                 Route::post('/delete', [ClientListController::class, 'delete'])->name('admin.client.delete'); 
                 Route::get('/training-status/{id}', [ClientListController::class, 'trainingStatus'])->name('admin.client.trainingStatus');
             });
+
             //master module/distributor, site ready, remarks
             Route::get('/distributor-list', [ClientListController::class, 'distributorList'])->name('admin.slot-booking.distributorList');
             Route::get('/site-ready/{id}', [ClientListController::class, 'siteReady'])->name('admin.client.siteReady');
             Route::post('/save-remarks', [ClientListController::class, 'saveRemarks'])->name('admin.client.saveRemarks');
 
             //master module/distributor, training, remarks
-            // Route::get('/training', [ClientListController::class, 'trainingList'])->name('admin.slot-booking.trainingList');
             Route::get('training-done/{id}', [ClientListController::class, 'trainingDone'])->name('admin.client.trainingDone');
             Route::post('/save-remarks-training', [ClientListController::class, 'saveRemarksTraining'])->name('admin.client.saveRemarksTraining');
 

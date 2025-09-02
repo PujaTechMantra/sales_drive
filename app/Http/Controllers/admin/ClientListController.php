@@ -212,7 +212,6 @@ class ClientListController extends Controller
 
         $distributors = $query->orderBy('id', 'desc')->get();
 
-
         if ($distributors->count() > 0) {
             $delimiter = ",";
             $filename = "distributor_export_" . date('Y-m-d') . ".csv";
