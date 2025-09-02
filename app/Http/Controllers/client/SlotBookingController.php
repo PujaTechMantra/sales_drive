@@ -127,10 +127,8 @@ class SlotBookingController extends Controller
     public function distributorList(Request $request) {
         $clientId = Auth::guard('client')->id();
         $slotDates = SlotBooking::where('client_id', $clientId)
-                                        ->select('slot_date')
-                                        ->distinct()
                                         ->orderBy('id', 'desc')
-                                        ->pluck('slot_date');
+                                        ->pluck('slot_date')->unique();
 
         $query = SlotBooking::with('user')->where('client_id', $clientId);
 

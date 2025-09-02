@@ -48,10 +48,20 @@
                         <div class="col-md-6"></div>
                         {{-- Left side (Slot Date Filter) --}}
                         <div class="form-group d-flex align-items-center mb-0">
-                            {{-- <label for="slot_date" class="me-2">Slot Date</label> --}}
                             <div class="form-group me-1 mb-0">
                                 <input type="search" class="form-control form-control-sm" name="keyword" id="keyword" value="{{ request()->input('keyword') }}" placeholder="Search something...">
                             </div>
+                            {{-- search by client name  --}}
+                            <select name="client_id" id="client_id" class="form-control form-control-sm select2" style="min-width: 200px;">
+                                <option value="">-- Search by Client --</option>
+                                @foreach($clients as $client)
+                                    <option value="{{ $client->id }}" {{ request('client_id') == $client->id ? 'selected' : '' }}>
+                                        {{ ucwords($client->name)}}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            {{-- search by date --}}
                             <select name="slot_date" id="slot_date" class="form-control form-control-sm select2 me-2" style="min-width: 200px;">
                                 <option value="">-- All Dates --</option>
                                 @foreach($slotDates as $date)
@@ -60,16 +70,18 @@
                                     </option>
                                 @endforeach
                             </select>
-                            <button type="submit" class="btn btn-sm btn-primary me-1">
+                            <button type="submit" class="btn btn-sm btn-primary">
                                 <i class="tf-icons ri-filter-3-line"></i>
                             </button>
                             <a href="{{ url()->current() }}" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Clear filter">
                                 <i class="tf-icons ri-close-line"></i>
                             </a>
+                            <a href="{{ route('admin.client.exportDistList', request()->all()) }}" class="btn btn-success waves-effect btn-sm" 
+                                data-toggle="tooltip" title="Export Data">
+                                <i class="tf-icons ri-download-line"></i>
+                            </a>
                         </div>
-
                     </div>
-
                 </div>
             </form>
             <table class="table table-bordered table-striped">
@@ -103,7 +115,7 @@
                                         onclick="statusSiteReadyToggle('{{route('admin.client.siteReady', $d->id)}}', this)">
                                     <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
                                 </div>                            
-                                <button type="button" class="badge rounded-pill bg-secondary" 
+                                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
                                         data-bs-toggle="modal" data-bs-target="#remarksModal" data-id="{{ $d->id }}"
                                         data-remarks="{{ $d->remarks }}">Remarks</button>
                             </td>
@@ -116,7 +128,7 @@
                                         <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
                                     </div>
                                     
-                                    <button type="button" class="badge rounded-pill bg-secondary" 
+                                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
                                             data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
                                             data-remarks="{{ $d->training_remarks }}">Training Remarks
                                     </button>
@@ -184,12 +196,19 @@
 @endsection
 @section('scripts')
 <script>
-    $(document).ready(function () {
-        $('#slot_date').select2({
-            placeholder: "Select a slot date",
-            allowClear: true
-        });
-    });
+    // $(document).ready(function () {
+    //     $('#slot_date').select2({
+    //         placeholder: "Select a slot date",
+    //         allowClear: true
+    //     });
+    // });
+
+    // $(document).ready(function() {
+    //     $('#client_id').select2({
+    //         placeholder: "Select a Client",
+    //         allowClear: true
+    //     })
+    // });
 
     //site ready remarks modal   
     document.addEventListener("DOMContentLoaded", function () {

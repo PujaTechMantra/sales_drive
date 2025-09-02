@@ -23,7 +23,7 @@
             <a href="{{url('/')}}" class="app-brand-link gap-3">
               <!-- <span class="app-brand-logo demo">@include('_partials.macros',["height"=>20,"withbg"=>'fill: #fff;'])</span>
               <span class="app-brand-text demo text-heading fw-semibold">{{config('variables.templateName')}}</span> -->
-              <img class="logo" src="{{asset('assets/img/logo-tm.png')}}">
+              <img class="logo" src="{{asset('assets/img/tm-icon.jpg')}}">
             </a>
           </div>
           <!-- /Logo -->

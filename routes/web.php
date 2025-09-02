@@ -157,6 +157,8 @@ Route::prefix('admin')->group(function () {
             // Route::get('/training', [ClientListController::class, 'trainingList'])->name('admin.slot-booking.trainingList');
             Route::get('training-done/{id}', [ClientListController::class, 'trainingDone'])->name('admin.client.trainingDone');
             Route::post('/save-remarks-training', [ClientListController::class, 'saveRemarksTraining'])->name('admin.client.saveRemarksTraining');
+
+            Route::get('/export', [ClientListController::class, 'exportDistList'])->name('admin.client.exportDistList');
         });
     });
 });

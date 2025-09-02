@@ -45,6 +45,14 @@
                         {{-- Left side (Slot Date Filter) --}}
                         <div class="form-group d-flex align-items-center mb-0">
                             {{-- <label for="slot_date" class="me-2">Slot Date</label> --}}
+                             <select name="slot_date" id="slot_date" class="form-control form-control-sm select2 me-2" style="min-width: 200px;">
+                                <option value="">-- All Dates --</option>
+                                @foreach($slotDates as $date)
+                                    <option value="{{ $date }}" {{ request('slot_date') == $date ? 'selected' : '' }}>
+                                        {{ date('d-m-Y', strtotime($date)) }}
+                                    </option>
+                                @endforeach
+                            </select>
                             <select name="slot_date" id="slot_date" class="form-control form-control-sm select2 me-2" style="min-width: 200px;">
                                 <option value="">-- All Dates --</option>
                                 @foreach($slotDates as $date)
@@ -101,6 +109,10 @@
                             <td>
                                 @if($d->user && $d->user->training_status == 0)
                                     <span class="badge bg-danger rounded-pill px-3 py-2">NO</span>
+                                    <button type="button" class="btn btn-sm btn-outline-primary rounded-circle trainingViewRemarksBtn"
+                                        data-bs-toggle="modal" data-bs-target="#trainingRemarksModal"
+                                        data-remarks="{{ $d->training_remarks}}" title="Remarks"><i class="ri-eye-line ri-15px"></i>
+                                    </button>
                                 @else
                                     @if($d->site_ready)
                                         <div class="form-check form-switch" data-bs-toggle="tooltip">
@@ -110,7 +122,7 @@
                                             <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
                                         </div>
                                         
-                                        <button type="button" class="badge rounded-pill bg-secondary" 
+                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-3" 
                                                 data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
                                                 data-remarks="{{ $d->training_remarks }}">Training Remarks
                                         </button>
@@ -130,7 +142,7 @@
             {{ $distributor->links() }}
         </div>
 
-        {{-- site ready remarks modal --}}
+        {{-- site ready remarks modal view --}}
         <div class="modal fade" id="remarksModal" tabindex="-1" aria-labelledby="remarksModal" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -140,6 +152,24 @@
                     </div>
                     <div class="modal-body">
                         <p id="remarksText" class="text-muted"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {{-- training remarks modal view --}}
+        <div class="modal fade" id="trainingRemarksModal" tabindex="-1" aria-labelledby="trainingRemarksModal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="trainingRemarksModalLabel">Training Remarks</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="trainingRemarksText" class="text-muted"></p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -182,6 +212,7 @@
         });
     });
 
+    //site ready view remarks modal
     document.addEventListener('DOMContentLoaded', function() {
         const remarksModal = document.getElementById('remarksModal');
         const remarksText = document.getElementById('remarksText');
@@ -190,6 +221,19 @@
             button.addEventListener('click', function() {
                 let remarks = this.getAttribute('data-remarks');
                 remarksText.textContent = remarks ? remarks : 'No Reamrks available.';
+            })
+        })
+    })
+
+    //training view remarks modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const trainingRemarksModal = document.getElementById('trainingRemarksModal');
+        const trainingRemarksText = document.getElementById('trainingRemarksText');
+
+        document.querySelectorAll('.trainingViewRemarksBtn').forEach(button => {
+            button.addEventListener('click', function() {
+                let trainingRemarks = this.getAttribute('data-remarks');
+                trainingRemarksText.textContent = trainingRemarks ? trainingRemarks : 'No Training Remarks available.';
             })
         })
     })

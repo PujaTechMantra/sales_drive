@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\{User, SlotBooking};
@@ -107,16 +108,19 @@ class ClientListController extends Controller
     }
 
     public function distributorList(Request $request) {
-        $slotDates = SlotBooking::select('slot_date') 
-                                    ->distinct()
-                                    ->orderBy('id', 'desc')
-                                    ->pluck('slot_date');
-
+    
+        $slotDates = SlotBooking::orderBy('id', 'desc')->pluck('slot_date')->unique();
         // $query = SlotBooking::query();
+
+        $clients = User::whereHas('slotbooking')->orderBy('name')->get();
         $query = SlotBooking::with('user');
 
         if ($request->filled('slot_date')) {
             $query->whereDate('slot_date', $request->slot_date);
+        }
+
+        if($request->filled('client_id')) {
+            $query->where('client_id', $request->client_id);
         }
 
         //filter by client keyword
@@ -124,12 +128,14 @@ class ClientListController extends Controller
             $keyword = $request->keyword;
             $query->whereHas('user', function($q) use ($keyword) {
                     $q->where('name', 'like', "%{$keyword}%")
-                        ->orWhere('distributor_name', 'like', "%{$keyword}%");
+                        ->orWhere('distributor_name', 'like', "%{$keyword}%")
+                        ->orWhere('distributor_address', 'like', "%{$keyword}%");
             });
         }
 
-        $distributor = $query->orderBy('id', 'desc')->paginate(20);
-        return view('admin.distributor.list', compact('distributor', 'slotDates'));
+        $distributor = $query->orderBy('id', 'desc')->paginate(15);
+        //dd($distributor);
+        return view('admin.distributor.list', compact('distributor', 'slotDates', 'clients'));
     }
 
     public function siteReady($id) {
@@ -154,31 +160,6 @@ class ClientListController extends Controller
         return redirect()->back()->with('sucess', 'Remarks added successfully');
     }
 
-    // public function trainingList(Request $request) {
-    //     $slotDates = SlotBooking::select('slot_date') 
-    //                                 ->distinct()
-    //                                 ->orderBy('id', 'desc')
-    //                                 ->pluck('slot_date');
-
-    //     // $query = SlotBooking::query();
-    //     $query = SlotBooking::with('user');
-
-    //     if ($request->filled('slot_date')) {
-    //         $query->whereDate('slot_date', $request->slot_date);
-    //     }
-
-    //     //filter by client keyword
-    //     if($request->filled('keyword')) {
-    //         $keyword = $request->keyword;
-    //         $query->whereHas('user', function($q) use ($keyword) {
-    //                 $q->where('name', 'like', "%{$keyword}%")
-    //                     ->orWhere('distributor_name', 'like', "%{$keyword}%");
-    //         });
-    //     }
-
-    //     $distributor = $query->orderBy('id', 'desc')->get();
-    //     return view('admin.training.list', compact('distributor', 'slotDates'));
-    // }
 
     public function trainingDone($id) {
         $training = SlotBooking::findOrFail($id);
@@ -200,6 +181,69 @@ class ClientListController extends Controller
             $training->save();
 
             return redirect()->route('admin.slot-booking.distributorList')->with('success', 'Training remarks added successfully');    
+    }
+
+    public function exportDistList(Request $request) {
+
+        $query = SlotBooking::with('user');
+
+        // Filter by slot_date
+        if ($request->filled('slot_date')) {
+            $query->whereDate('slot_date', $request->slot_date);
+        }
+
+        // Filter by client_id
+        if ($request->filled('client_id')) {
+            $query->where('client_id', $request->client_id);
+        }
+       
+        // Filter by keyword 
+        if($request->filled('keyword')) {
+            $keyword = $request->keyword;
+            $query->where(function($q) use ($keyword) {
+                $q->whereHas('user', function($sub) use ($keyword) {
+                    $sub->where('name', 'like', "%{$keyword}%");
+                })->orWhere('distributor_name', 'like', "%{$keyword}%")
+                    ->orWhere('distributor_address', 'like', "%{$keyword}%")
+                    ->orWhere('distributor_contact_no', 'like', "%{$keyword}%")
+                    ->orWhere('distributor_email', 'like', "%{$keyword}%");
+            });
+        }
+
+        $distributors = $query->orderBy('id', 'desc')->get();
+
+
+        if ($distributors->count() > 0) {
+            $delimiter = ",";
+            $filename = "distributor_export_" . date('Y-m-d') . ".csv";
+
+            $f = fopen('php://memory', 'w');
+
+            // CSV column headers
+            $headers = ['Client Name', 'Distributor Name', 'Distributor Address', 'Contact Number', 'Email', 'Slot Date'];
+            fputcsv($f, $headers, $delimiter);
+
+            foreach ($distributors as $distributor) {
+                $lineData = [
+                    $distributor->user ? $distributor->user->name : 'N/A',
+                    $distributor->distributor_name,
+                    $distributor->distributor_address,
+                    $distributor->distributor_contact_no,
+                    $distributor->distributor_email,
+                    Carbon::parse($distributor->slot_date)->format('d-m-Y'),
+                ];
+                fputcsv($f, $lineData, $delimiter);
+            }
+
+            // Rewind and output
+            fseek($f, 0);
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="' . $filename . '";');
+            fpassthru($f);
+            exit;
+        } else {
+            return redirect()->back()->with('error', 'No records found to export.');
+        }
     }
 
   
