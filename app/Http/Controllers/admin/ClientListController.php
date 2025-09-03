@@ -111,7 +111,11 @@ class ClientListController extends Controller
     
         $slotDates = SlotBooking::orderBy('id', 'desc')->pluck('slot_date')->unique();
         // $query = SlotBooking::query();
-
+        $availableDates = SlotBooking::pluck('slot_date')->unique()
+                                        ->map(fn($date)=>Carbon::parse($date)->format('Y-m-d'))
+                                        ->values()
+                                        ->toArray();
+        //dd($availableDates);
         $clients = User::whereHas('slotbooking')->orderBy('name')->get();
         $query = SlotBooking::with('user');
 
@@ -120,7 +124,7 @@ class ClientListController extends Controller
         }
 
         if($request->filled('client_id')) {
-            $query->where('client_id', $request->client_id);
+            $query->whereIn('client_id', $request->client_id);
         }
 
         //filter by client keyword
@@ -135,7 +139,7 @@ class ClientListController extends Controller
 
         $distributor = $query->orderBy('id', 'desc')->paginate(15);
         //dd($distributor);
-        return view('admin.distributor.list', compact('distributor', 'slotDates', 'clients'));
+        return view('admin.distributor.list', compact('distributor', 'slotDates', 'clients', 'availableDates'));
     }
 
     public function siteReady($id) {
@@ -194,7 +198,7 @@ class ClientListController extends Controller
 
         // Filter by client_id
         if ($request->filled('client_id')) {
-            $query->where('client_id', $request->client_id);
+            $query->whereIn('client_id', $request->client_id);
         }
        
         // Filter by keyword 

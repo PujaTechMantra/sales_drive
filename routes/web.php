@@ -59,14 +59,14 @@ Route::get('/', function () {
 });
 
 // layout
-Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
-Route::get('/layouts/without-navbar', [WithoutNavbar::class, 'index'])->name('layouts-without-navbar');
-Route::get('/layouts/fluid', [Fluid::class, 'index'])->name('layouts-fluid');
-Route::get('/layouts/container', [Container::class, 'index'])->name('layouts-container');
-Route::get('/layouts/blank', [Blank::class, 'index'])->name('layouts-blank');
+// Route::get('/layouts/without-menu', [WithoutMenu::class, 'index'])->name('layouts-without-menu');
+// Route::get('/layouts/without-navbar', [WithoutNavbar::class, 'index'])->name('layouts-without-navbar');
+// Route::get('/layouts/fluid', [Fluid::class, 'index'])->name('layouts-fluid');
+// Route::get('/layouts/container', [Container::class, 'index'])->name('layouts-container');
+// Route::get('/layouts/blank', [Blank::class, 'index'])->name('layouts-blank');
 
 // pages
-Route::get('/pages/account-settings-account', [AccountSettingsAccount::class, 'index'])->name('pages-account-settings-account');
+// Route::get('/pages/account-settings-account', [AccountSettingsAccount::class, 'index'])->name('pages-account-settings-account');
 Route::get('/pages/account-settings-notifications', [AccountSettingsNotifications::class, 'index'])->name('pages-account-settings-notifications');
 Route::get('/pages/account-settings-connections', [AccountSettingsConnections::class, 'index'])->name('pages-account-settings-connections');
 Route::get('/pages/misc-error', [MiscError::class, 'index'])->name('pages-misc-error');

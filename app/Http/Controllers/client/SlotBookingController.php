@@ -130,6 +130,13 @@ class SlotBookingController extends Controller
                                         ->orderBy('id', 'desc')
                                         ->pluck('slot_date')->unique();
 
+        $availableDates = SlotBooking::where('client_id', $clientId)
+                                        ->pluck('slot_date')
+                                        ->unique()
+                                        ->map(fn($date)=>Carbon::parse($date)->format('Y-m-d'))
+                                        ->values()
+                                        ->toArray();
+
         $query = SlotBooking::with('user')->where('client_id', $clientId);
 
         if ($request->has('slot_date') && $request->slot_date != '') {
@@ -137,7 +144,7 @@ class SlotBookingController extends Controller
         }
 
         $distributor = $query->orderBy('id', 'desc')->paginate(20);
-        return view('client.slotBooking.list', compact('distributor', 'slotDates'));
+        return view('client.slotBooking.list', compact('distributor', 'slotDates', 'availableDates'));
     }
 
    

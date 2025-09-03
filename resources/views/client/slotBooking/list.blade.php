@@ -45,22 +45,19 @@
                         {{-- Left side (Slot Date Filter) --}}
                         <div class="form-group d-flex align-items-center mb-0">
                             {{-- <label for="slot_date" class="me-2">Slot Date</label> --}}
-                             <select name="slot_date" id="slot_date" class="form-control form-control-sm select2 me-2" style="min-width: 200px;">
+                            
+                            {{-- <select name="slot_date" id="slot_date" class="form-control form-control-sm select2 me-2" style="min-width: 200px;">
                                 <option value="">-- All Dates --</option>
                                 @foreach($slotDates as $date)
                                     <option value="{{ $date }}" {{ request('slot_date') == $date ? 'selected' : '' }}>
                                         {{ date('d-m-Y', strtotime($date)) }}
                                     </option>
                                 @endforeach
-                            </select>
-                            <select name="slot_date" id="slot_date" class="form-control form-control-sm select2 me-2" style="min-width: 200px;">
-                                <option value="">-- All Dates --</option>
-                                @foreach($slotDates as $date)
-                                    <option value="{{ $date }}" {{ request('slot_date') == $date ? 'selected' : '' }}>
-                                        {{ date('d-m-Y', strtotime($date)) }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            </select> --}}
+                            <input type="text" class="form-control" name="slot_date" id="slot_date"
+                                placeholder="Select slot date" autocomplete="off"
+                                value="{{ request('slot_date')}}">
+
                             <button type="submit" class="btn btn-sm btn-primary me-1">
                                 <i class="tf-icons ri-filter-3-line"></i>
                             </button>
@@ -77,9 +74,7 @@
                     <tr>
                         <th>#</th>
                         <th>Distributor Name</th>
-                        <th>Distributor Address</th>
-                        <th>Distributor Contact No</th>
-                        <th>Distributor Email</th>
+                        <th>Distributor Details</th>
                         <th>Slot Date</th>
                         <th>Site Ready</th>
                         <th>Training Status</th>
@@ -90,9 +85,13 @@
                         <tr>
                             <td>{{ $index + 1 }}</td>
                             <td>{{ ucwords($d->distributor_name) }}</td>
-                            <td>{{ ucwords($d->distributor_address) }}</td>
-                            <td>{{ $d->distributor_contact_no }}</td>
-                            <td>{{ $d->distributor_email }}</td>
+                            <td>
+                                <ul>
+                                    <li>Address: {{ ucwords($d->distributor_address) }}</li>
+                                    <li>Contact: {{ $d->distributor_contact_no }}</li>
+                                    <li>Email: {{ $d->distributor_email }}</li>
+                                </ul>
+                            </td>
                             <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
                             <td>
                                 @if($d->site_ready == 1)
@@ -204,11 +203,25 @@
 </div>
 @endsection
 @section('scripts')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    $(document).ready(function () {
-        $('#slot_date').select2({
-            placeholder: "Select a slot date",
-            allowClear: true
+
+    document.addEventListener("DOMContentLoaded", function () {
+        // get all allowed dates from backend
+        let activeDates = @json($availableDates); 
+
+        flatpickr("#slot_date", {
+            dateFormat: "Y-m-d",
+            enable: activeDates,
+            onDayCreate: function(dObj, dStr, fp, dayElem) {
+                // if this date is in your activeDates array
+                let dateStr = fp.formatDate(dayElem.dateObj, "Y-m-d");
+                if (activeDates.includes(dateStr)) {
+                    // add custom class
+                    dayElem.classList.add("highlight-date");
+                }
+            }
         });
     });
 

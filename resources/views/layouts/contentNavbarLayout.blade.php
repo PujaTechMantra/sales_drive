@@ -65,7 +65,6 @@ $container = ($container ?? 'container-xxl');
 
           <!-- Bootstrap Bundle (includes Popper for tooltip) -->
           <script src="{{asset('build/assets/bootstrap.bundle.min.js')}}"></script>
-          {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> --}}
 
           <!-- SweetAlert2 -->
           <script src="{{ asset('build/assets/sweetalert2@11.js') }}"></script>
@@ -77,6 +76,9 @@ $container = ($container ?? 'container-xxl');
           {{-- for icon --}}
           <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
 
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
+          <link rel="stylesheet" href="{{ asset('build/assets/chosen.min.css') }}">
+          
           <!-- jQuery (required) -->
 
           <!-- Select2 JS -->
@@ -85,8 +87,8 @@ $container = ($container ?? 'container-xxl');
             {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
           <!-- Global custom JS -->
           <script src="{{ asset('build/assets/custom.js') }}"></script>
-
-
+          <script src="{{ asset('build/assets/chosen.jquery.min.js')}}"></script>
+          
 
           <!-- Stacked scripts from individual views (optional) -->
           @yield('scripts')
