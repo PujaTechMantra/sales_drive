@@ -33,8 +33,7 @@
                                     </button>
                                     <a href="{{ url()->current() }}" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Clear filter">
                                         <i class=" tf-icons ri-close-line"></i>
-                                    </a>
-                            
+                                    </a>                            
                                 </div>
                             </div>
                             </div>
@@ -54,7 +53,7 @@
                             <th>Address</th>
                             <th>Status</th>
                             <th>Actions</th>
-                            <th>Training status</th>
+                            <th>Training Access</th>
                         </tr>
                     </thead>
                     <tbody id="clientTableBody">
@@ -96,7 +95,7 @@
             {{-- add client --}}
             <div class="modal fade" id="addClientModal" tabindex="-1" aria-hidden="true">
                 <div class="modal-dialog">
-                    <form id="addClientForm">
+                    <form id="addClientForm" autocomplete="off">
                         @csrf
                         <div class="modal-content">
                             <div class="modal-header">
@@ -112,7 +111,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Email</label>
-                                    <input type="email" name="email" class="form-control"/>
+                                    <input type="email" name="email" class="form-control" autocomplete="off"/>
                                     <span class="text-danger error-text email_error"></span>
                                 </div>
                                 <div class="mb-3">
@@ -127,7 +126,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Password</label>
-                                    <input type="password" name="password" class="form-control"/>
+                                    <input type="password" name="password" class="form-control" autocomplete="new-password"/>
                                     <span class="text-danger error-text password_error"></span>
                                 </div>
                             </div>

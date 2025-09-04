@@ -50,7 +50,8 @@
                         {{-- Left side (Slot Date Filter) --}}
                         <div class="form-group d-flex align-items-center mb-0">
                             <div class="form-group me-1 mb-0">
-                                <input type="search" class="form-control form-control-sm" name="keyword" id="keyword" value="{{ request()->input('keyword') }}" placeholder="Search something...">
+                                <input type="search" class="form-control form-control-sm" name="keyword" id="keyword" 
+                                    value="{{ request()->input('keyword') }}" placeholder="Search" style=" width:200px; height: 5px">
                             </div>
                             {{-- search by client name  --}}
                             <select name="client_id[]" id="client_id" class="chosen-select" style="min-width: 200px;" multiple data-placeholder="Select options...">
@@ -73,7 +74,7 @@
                             </select> --}}
                             {{-- <label for="slot_date" class="form-label">Select Slot Date</label> --}}
                             <input type="text" class="form-control" name="slot_date" id="slot_date"
-                                placeholder="Select slot date" autocomplete="off"
+                                placeholder="Select slot date" autocomplete="off" style="height: 30px" 
                                 value="{{ request('slot_date')}}">
 
                             <button type="submit" class="btn btn-sm btn-primary">
@@ -205,8 +206,8 @@
 </div>
 @endsection
 @section('scripts')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="{{ asset('build/assets/flatpickr.min.css') }}">
+<script src="{{ asset('build/assets/flatpickr.js')}}"></script>
 <script>
     
     document.addEventListener("DOMContentLoaded", function () {

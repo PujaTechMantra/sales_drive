@@ -78,6 +78,7 @@ $container = ($container ?? 'container-xxl');
 
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
           <link rel="stylesheet" href="{{ asset('build/assets/chosen.min.css') }}">
+
           
           <!-- jQuery (required) -->
 
@@ -87,6 +88,7 @@ $container = ($container ?? 'container-xxl');
             {{-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> --}}
           <!-- Global custom JS -->
           <script src="{{ asset('build/assets/custom.js') }}"></script>
+
           <script src="{{ asset('build/assets/chosen.jquery.min.js')}}"></script>
           
 

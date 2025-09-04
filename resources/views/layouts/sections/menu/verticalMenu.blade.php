@@ -31,7 +31,7 @@
       {{-- Master Management --}}
       <li class="menu-item {{ (request()->is('admin/master-module*')) ? 'open' : '' }}" style="">
         <a href="#" class="menu-link menu-toggle waves-effect" target="_blank">
-          <i class="menu-icon fa-solid fa-address-book"></i>
+          <i class="menu-icon fa-solid fa-house"></i>
           <div>Master Module</div>
         </a>
         <ul class="menu-sub">

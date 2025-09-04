@@ -55,7 +55,7 @@
                                 @endforeach
                             </select> --}}
                             <input type="text" class="form-control" name="slot_date" id="slot_date"
-                                placeholder="Select slot date" autocomplete="off"
+                                placeholder="Select slot date" autocomplete="off" style="height: 30px"
                                 value="{{ request('slot_date')}}">
 
                             <button type="submit" class="btn btn-sm btn-primary me-1">
@@ -203,8 +203,8 @@
 </div>
 @endsection
 @section('scripts')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="{{ asset('build/assets/flatpickr.min.css') }}">
+<script src="{{ asset('build/assets/flatpickr.js')}}"></script>
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {

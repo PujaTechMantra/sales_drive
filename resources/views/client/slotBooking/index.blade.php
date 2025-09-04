@@ -63,8 +63,10 @@
 </div>
 @endsection
 @section('scripts')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> --}}
+<link rel="stylesheet" href="{{ asset('build/assets/flatpickr.min.css') }}">
+<script src="{{ asset('build/assets/flatpickr.js')}}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         let activeDays = @json($available_day); // e.g. ["tuesday","wednesday","thursday"]
