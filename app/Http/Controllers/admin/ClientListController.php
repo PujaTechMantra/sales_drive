@@ -249,5 +249,11 @@ class ClientListController extends Controller
         }
     }
 
+    public function siteReadinessForm($id) {
+        $slot = SlotBooking::with('siteReadinessForm')->findOrFail($id);
+        //dd($slot);
+        return view('admin.distributor.siteReadinessForm', compact('slot'));
+    }
+
   
 }

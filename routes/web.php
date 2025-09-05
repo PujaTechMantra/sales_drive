@@ -158,6 +158,9 @@ Route::prefix('admin')->group(function () {
             Route::post('/save-remarks-training', [ClientListController::class, 'saveRemarksTraining'])->name('admin.client.saveRemarksTraining');
 
             Route::get('/export', [ClientListController::class, 'exportDistList'])->name('admin.client.exportDistList');
+
+            //site readiness form
+            Route::get('/site-readiness-form/{id}', [ClientListController::class, 'siteReadinessForm'])->name('admin.client.siteReadinessForm');
         });
     });
 });

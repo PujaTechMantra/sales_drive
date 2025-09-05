@@ -71,7 +71,9 @@ class SlotBookingController extends Controller
             'distributor_address.*'     => 'required|string|max:255',
             'distributor_contact_no.*'  => 'required|digits:10',
             'distributor_email.*'       => 'required|email|max:255',
-            'slot_date'               => 'required|date',
+            'gst_number.*'              => 'required|string|max:15', 
+            'pan_number.*'              => 'required|string|max:10',
+            'slot_date'                 => 'required|date',
         ],[
             // Distributor Name
             'distributor_name.*.required' => 'Distributor name is required.',
@@ -91,6 +93,16 @@ class SlotBookingController extends Controller
             'distributor_email.*.required' => 'Distributor email is required.',
             'distributor_email.*.email'    => 'Distributor email must be a valid email address (e.g., name@example.com).',
             'distributor_email.*.max'      => 'Distributor email should not exceed 255 characters.',
+
+            // GST Number
+            'gst_number.*.required' => 'GST number is required.',
+            'gst_number.*.string'   => 'GST number must be valid text.',
+            'gst_number.*.max'    => 'GST number should not exceed 15 characters.',
+
+            //PAN Number
+            'pan_number.*.required' => 'PAN number is required.',
+            'pan_number.*.string'   => 'PAN number must be valid text.',
+            'pan_number.*.max'      => 'PAN number should not exceed 10 characters.',
 
             // Slot Date
             'slot_date.required' => 'Slot date is required.',
@@ -117,6 +129,8 @@ class SlotBookingController extends Controller
                 'distributor_address'    => $request->distributor_address[$index],
                 'distributor_contact_no' => $request->distributor_contact_no[$index],
                 'distributor_email'      => $request->distributor_email[$index],
+                'gst_number'             => $request->gst_number[$index],
+                'pan_number'             => $request->pan_number[$index],
                 'slot_date'              => $slotDate,
             ]);
         }

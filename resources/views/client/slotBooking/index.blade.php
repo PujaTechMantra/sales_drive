@@ -52,6 +52,21 @@
                         @error('distributor_email') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3"><label>Distributor Pan Number</label>
+                            <input type="text" name="pan_number[]" id="pan_number" class="form-control">
+                        </div>
+                        @error('pan_number') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="col-md-6">                
+                        <div class="mb-3"><label>Distributor GST Number</label>
+                            <input type="text" name="gst_number[]" id="gst_number" class="form-control">
+                        </div>
+                        @error('gst_number') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                </div>
                 
             </div>
         </div>

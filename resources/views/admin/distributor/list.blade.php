@@ -115,10 +115,16 @@
                                     <li>Address: {{ ucwords($d->distributor_address) }}</li>
                                     <li>Contact: {{ $d->distributor_contact_no }}</li>
                                     <li>Email: {{ $d->distributor_email }}</li>
+                                    <li>PAN:{{ $d->pan_number}}</li>
+                                    <li>GST:{{ $d->gst_number }}</li>
                                 </ul>
                             </td>
                             <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
                             <td>
+                                {{-- <button type="button">Site readiness form</button> --}}
+                                <a href="{{ route('admin.client.siteReadinessForm', $d->id)}}" target="_blank" 
+                                    class="btn btn-outline-primary btn-sm">Site Readiness Form
+                                </a>
                                 <div class="form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
                                     <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
                                         {{ $d->site_ready ? 'checked' : '' }}

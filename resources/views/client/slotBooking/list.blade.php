@@ -90,6 +90,8 @@
                                     <li>Address: {{ ucwords($d->distributor_address) }}</li>
                                     <li>Contact: {{ $d->distributor_contact_no }}</li>
                                     <li>Email: {{ $d->distributor_email }}</li>
+                                    <li>PAN:{{ $d->pan_number}}</li>
+                                    <li>GST:{{ $d->gst_number }}</li>
                                 </ul>
                             </td>
                             <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
