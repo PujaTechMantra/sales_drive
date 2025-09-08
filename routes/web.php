@@ -161,6 +161,7 @@ Route::prefix('admin')->group(function () {
 
             //site readiness form
             Route::get('/site-readiness-form/{id}', [ClientListController::class, 'siteReadinessForm'])->name('admin.client.siteReadinessForm');
+            Route::get('/site-status/{slot_booking_id}/{field}', [ClientListController::class, 'siteStatus'])->name('admin.client.siteStatus');
         });
     });
 });

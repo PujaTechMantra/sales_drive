@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('zone')->nullable();
             $table->string('contact_person')->nullable();
+            $table->string('distributor_email')->nullable();
             $table->string('contact_person_phone')->nullable();
             $table->string('gst_number')->nullable();
             $table->string('pan_number')->nullable();
@@ -37,6 +38,7 @@ return new class extends Migration
             $table->string('beat_id')->nullable();
             $table->string('beat_type')->nullable();
             $table->string('region_code')->nullable();
+            $table->string('region_csp')->nullable();
             $table->string('region_name')->nullable();
             $table->string('beat_distributor_codes')->nullable();
 
@@ -51,27 +53,29 @@ return new class extends Migration
             $table->string('employee_distributor_codes')->nullable();
 
             // -------- Mappings --------
-            $table->tinyInteger('employee_distributor_mapping')->default(0);
-            $table->tinyInteger('dsr_distributor_mapping')->default(0);
-            $table->tinyInteger('beat_employee_mapping')->default(0);
-            $table->tinyInteger('supplier_distributor_mapping')->default(0);
+            $table->string('employee_distributor_mapping')->nullable();
+            $table->string('dsr_distributor_mapping')->nullable();
+            $table->string('beat_employee_mapping')->nullable();
+            $table->string('supplier_distributor_mapping')->nullable();
 
             // -------- Outlet --------
-            $table->tinyInteger('outlet_sync_csp')->default(0);
-            $table->tinyInteger('outlet_lead_creation')->default(0);
-            $table->tinyInteger('outlet_lead_approval')->default(0);
+            $table->string('outlet_sync_csp')->nullable();
+            $table->string('outlet_lead_creation')->nullable();
+            $table->string('outlet_lead_approval')->nullable();
 
             // -------- Regional Price --------
-            $table->tinyInteger('regional_price')->default(0);
+            $table->string('regional_price')->nullable();
 
             // -------- Opening Stock / Orders --------
-            $table->tinyInteger('opening_stock')->default(0)->comment('1=yes, 0=no');
-            $table->tinyInteger('grn_invoice')->default(0)->comment('1=yes, 0=no');
-            $table->tinyInteger('sales_order')->default(0)->comment('1=yes, 0=no');
-            $table->tinyInteger('opening_points')->default(0)->comment('1=yes, 0=no');
+            $table->string('opening_stock')->nullable();
+            $table->string('grn_invoice')->nullable();
+            $table->string('sales_order')->nullable();
+            $table->string('opening_points')->nullable();
 
             // -------- Extra --------
             $table->text('remarks')->nullable();
+
+            $table->tinyInteger('status')->default(1)->comment('1: active | 0: inactive');
 
             $table->timestamps();
 

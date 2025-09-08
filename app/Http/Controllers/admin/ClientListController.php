@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\{User, SlotBooking};
+use App\Models\{User, SlotBooking, SiteReadinessForm};
 
 
 class ClientListController extends Controller
@@ -252,8 +252,41 @@ class ClientListController extends Controller
     public function siteReadinessForm($id) {
         $slot = SlotBooking::with('siteReadinessForm')->findOrFail($id);
         //dd($slot);
-        return view('admin.distributor.siteReadinessForm', compact('slot'));
+        $siteReady = $slot->siteReadinessForm;
+        return view('admin.distributor.siteReadinessForm', compact('slot', 'siteReady'));
     }
 
-  
+    // public function siteStatus($id, $field) {
+    //     $siteReady = SiteReadinessForm::findOrFail($id);
+
+    //     if(in_array($field,['distributor_code_status', 'distributor_name_status', 'full_address_status', 'office_phone_no_status',
+    //         'city_status', 'state_status', 'zone_status', 'contact_person_status', 'distributor_email_status', 'contact_person_phone_status',
+    //         'gst_number_status', 'pan_number_status', 'so_name_status', 'so_contact_number_status', 'brands_status', 'beat_name_status', 'beat_id_status', 'beat_type_status',
+    //         'region_code_status', 'region_csp_status', 'region_name_status', 'beat_distributor_codes_status', 'employee_id_status', 'employee_label_status', 'employee_name_status',
+    //         'designation_code_status', 'rm_employee_id_status', 'rm_designation_code_status', 'state_code_status', 'employee_distributor_codes_status', 'employee_distributor_mapping_status',
+    //         'dsr_distributor_mapping_status', 'beat_employee_mapping_status', 'supplier_distributor_mapping_status', 'outlet_sync_csp_status', 'outlet_lead_creation_status', 'outlet_lead_approval_status',
+    //         'regional_price_status', 'opening_stock_status', 'grn_invoice_status', 'sales_order_status', 'opening_points_status'])) {
+    //         $siteReady->$field = $siteReady->$field ? 0 : 1;
+    //         $siteReady->save();
+    //         return response()->json([
+    //             'status'  => 200,
+    //             'message' => ucfirst(str_replace('_', ' ', $field)) . ' updated successfully'
+    //         ]);
+    //     }
+    // }
+    public function siteStatus($slot_booking_id, $field, Request $request)
+    {
+        // find or create
+        $form = SiteReadinessForm::firstOrCreate(
+            ['slot_booking_id' => $slot_booking_id],
+            ['distributor_code_status' => $distributor_code_status] // default values auto taken from migration (1 or 0)
+        );
+
+        // toggle the field
+        $form->$field = $request->status ? 1 : 0;
+        $form->save();
+
+        return response()->json(['success' => true, 'new_value' => $form->$field]);
+    }
+
 }
