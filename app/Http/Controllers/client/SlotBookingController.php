@@ -67,18 +67,27 @@ class SlotBookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'distributor_name.*'        => 'required|string|max:255',
-            'distributor_address.*'     => 'required|string|max:255',
-            'distributor_contact_no.*'  => 'required|digits:10',
-            'distributor_email.*'       => 'required|email|max:255',
-            'gst_number.*'              => 'required|string|max:15', 
-            'pan_number.*'              => 'required|string|max:10',
-            'slot_date'                 => 'required|date',
+            'distributor_name.*'            => 'required|string|max:155',
+            'distributor_address.*'         => 'required|string|max:255',
+            'distributor_contact_no.*'      => 'required|digits:10',
+            'distributor_email.*'           => 'required|email|max:100',
+            'gst_number.*'                  => 'required|string|max:15',
+            'pan_number.*'                  => 'required|string|max:10',
+            'distributor_code.*'            => 'required|string|max:50',
+            'city.*'                        => 'required|string|max:30',
+            'state.*'                       => 'required|string|max:30',
+            'zone.*'                        => 'required|string|max:30',
+            'distributor_contact_person.*'  => 'nullable|string|max:155',
+            'distributor_contact_person_phone.*' => 'nullable|digits:10',
+            'so_name.*'                     => 'nullable|string|max:155',
+            'so_contact_no.*'               => 'nullable|digits:10',
+            'slot_date'                     => 'required|date',
+            
         ],[
             // Distributor Name
             'distributor_name.*.required' => 'Distributor name is required.',
             'distributor_name.*.string'   => 'Distributor name must be valid text.',
-            'distributor_name.*.max'      => 'Distributor name should not exceed 255 characters.',
+            'distributor_name.*.max'      => 'Distributor name should not exceed 155 characters.',
 
             // Distributor Address
             'distributor_address.*.required' => 'Distributor address is required.',
@@ -92,17 +101,39 @@ class SlotBookingController extends Controller
             // Distributor Email
             'distributor_email.*.required' => 'Distributor email is required.',
             'distributor_email.*.email'    => 'Distributor email must be a valid email address (e.g., name@example.com).',
-            'distributor_email.*.max'      => 'Distributor email should not exceed 255 characters.',
+            'distributor_email.*.max'      => 'Distributor email should not exceed 100 characters.',
 
             // GST Number
             'gst_number.*.required' => 'GST number is required.',
             'gst_number.*.string'   => 'GST number must be valid text.',
-            'gst_number.*.max'    => 'GST number should not exceed 15 characters.',
+            'gst_number.*.max'      => 'GST number should not exceed 15 characters.',
 
             //PAN Number
             'pan_number.*.required' => 'PAN number is required.',
             'pan_number.*.string'   => 'PAN number must be valid text.',
             'pan_number.*.max'      => 'PAN number should not exceed 10 characters.',
+
+            //Distributor Code
+            'distributor_code.*.required' => 'Distributor code is required.',
+            'distributor_code.*.string'   => 'Distributor code must be valid text.',
+            'distributor_code.*.max'      => 'Distributor code should not exceed 50 characters.',
+
+            //City
+            'city.*.required' => 'City is required.',
+            'city.*.string'   => 'City must be valid text.',
+            'city.*.max'      => 'City should not exceed 30 characters.',
+
+            //State
+            'state.*.required' => 'State is required.',
+            'state.*.string'   => 'State must be valid text.',
+            'state.*.max'      => 'State should not exceed 30 characters.',
+
+             //Zone
+            'zone.*.required' => 'Zone is required.',
+            'zone.*.string'   => 'Zone must be valid text.',
+            'zone.*.max'      => 'Zone should not exceed 30 characters.',
+
+          
 
             // Slot Date
             'slot_date.required' => 'Slot date is required.',
@@ -131,7 +162,15 @@ class SlotBookingController extends Controller
                 'distributor_email'      => $request->distributor_email[$index],
                 'gst_number'             => $request->gst_number[$index],
                 'pan_number'             => $request->pan_number[$index],
-                'slot_date'              => $slotDate,
+                'distributor_code'       => $request->distributor_code[$index],
+                'city'                   => $request->city[$index],
+                'state'                  => $request->state[$index],
+                'zone'                   => $request->zone[$index],
+                'distributor_contact_person'        => $request->distributor_contact_person[$index],
+                'distributor_contact_person_phone'  => $request->distributor_contact_person_phone[$index],
+                'so_name'               => $request->so_name[$index],
+                'so_contact_no'         => $request->so_contact_no[$index],
+                'slot_date'             => $slotDate,
             ]);
         }
 

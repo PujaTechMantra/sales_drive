@@ -223,10 +223,12 @@ class ClientListController extends Controller
             $f = fopen('php://memory', 'w');
 
             // CSV column headers
-            $headers = ['Client Name', 'Distributor Name', 'Distributor Address', 'Contact Number', 'Email', 'Slot Date'];
+            $headers = ['Client Name', 'Distributor Name', 'Distributor Address', 'Contact Number', 
+            'Email', 'Slot Date', 'Training complete status'];
             fputcsv($f, $headers, $delimiter);
 
             foreach ($distributors as $distributor) {
+                $status = ($distributor->site_ready == 1 && $distributor->training_done == 1) ? 'SUCCESS' : 'FAILED';
                 $lineData = [
                     $distributor->user ? $distributor->user->name : 'N/A',
                     $distributor->distributor_name,
@@ -234,6 +236,7 @@ class ClientListController extends Controller
                     $distributor->distributor_contact_no,
                     $distributor->distributor_email,
                     Carbon::parse($distributor->slot_date)->format('d-m-Y'),
+                    $status,
                 ];
                 fputcsv($f, $lineData, $delimiter);
             }
@@ -252,41 +255,82 @@ class ClientListController extends Controller
     public function siteReadinessForm($id) {
         $slot = SlotBooking::with('siteReadinessForm')->findOrFail($id);
         //dd($slot);
+        if(!$slot->siteReadinessForm) {
+            $slot->siteReadinessForm()->create([
+                'slot_booking_id'       => $slot->id,
+                'distributor_code'      => $slot->distributor_code ?? null,
+                'distributor_name'      => $slot->distributor_name ?? null,
+                'full_address'          => $slot->full_address ?? null,
+                'office_phone_no'       => $slot->office_phone_no ?? null,
+                'city'                  => $slot->city ?? null,
+                'state'                 => $slot->state ?? null,
+                'zone'                  => $slot->zone ?? null,
+                'contact_person'        => $slot->contact_person ?? null,
+                'distributor_email'     => $slot->distributor_email ?? null,
+                'contact_person_phone'  => $slot->contact_person_phone ?? null,
+                'gst_number'            => $slot->gst_number ?? null,
+                'pan_number'            => $slot->pan_number ?? null,
+                'so_name'               => $slot->so_name ?? null,
+                'so_contact_number'     => $slot->so_contact_number ?? null,
+                'brands'                => $slot->brands ?? null,
+                'beat_name'             => $slot->beat_name ?? null,
+                'beat_id'               => $slot->beat_id ?? null,
+                'beat_type'             => $slot->beat_type ?? null,
+                'region_code'           => $slot->region_code ?? null,
+                'region_csp'            => $slot->region_csp ?? null,
+                'region_name'           => $slot->region_name ?? null,
+                'beat_distributor_codes'      => $slot->beat_distributor_codes ?? null,
+                'employee_id'           => $slot->employee_id ?? null,
+                'employee_label'        => $slot->employee_label ?? null,
+                'employee_name'         => $slot->employee_name ?? null,
+                'designation_code'      => $slot->designation_code ?? null,
+                'rm_employee_id'        => $slot->rm_employee_id ?? null,
+                'rm_designation_code'   => $slot->rm_designation_code ?? null,
+                'state_code'            => $slot->state_code ?? null,
+                'employee_distributor_codes'   => $slot->employee_distributor_codes ?? null,
+                'employee_distributor_mapping' => $slot->employee_distributor_mapping ?? null,
+                'dsr_distributor_mapping'      => $slot->dsr_distributor_mapping ?? null,
+                'beat_employee_mapping'        => $slot->beat_employee_mapping ?? null,
+                'supplier_distributor_mapping' => $slot->supplier_distributor_mapping ?? null,
+                'outlet_sync_csp'      => $slot->outlet_sync_csp ?? null,
+                'outlet_lead_creation'         => $slot->outlet_lead_creation ?? null,
+                'outlet_lead_approval'         => $slot->outlet_lead_approval ?? null,
+                'regional_price'        => $slot->regional_price ?? null,
+                'opening_stock'         => $slot->opening_stock ?? null,
+                'grn_invoice'           => $slot->grn_invoice ?? null,
+                'sales_order'           => $slot->sales_order ?? null,
+                'opening_points'        => $slot->opening_points ?? null,
+                'remarks'               => $slot->remarks ?? null,
+                'status'                => $slot->status ?? null,
+
+            ]);
+        }
         $siteReady = $slot->siteReadinessForm;
         return view('admin.distributor.siteReadinessForm', compact('slot', 'siteReady'));
     }
 
-    // public function siteStatus($id, $field) {
-    //     $siteReady = SiteReadinessForm::findOrFail($id);
 
-    //     if(in_array($field,['distributor_code_status', 'distributor_name_status', 'full_address_status', 'office_phone_no_status',
-    //         'city_status', 'state_status', 'zone_status', 'contact_person_status', 'distributor_email_status', 'contact_person_phone_status',
-    //         'gst_number_status', 'pan_number_status', 'so_name_status', 'so_contact_number_status', 'brands_status', 'beat_name_status', 'beat_id_status', 'beat_type_status',
-    //         'region_code_status', 'region_csp_status', 'region_name_status', 'beat_distributor_codes_status', 'employee_id_status', 'employee_label_status', 'employee_name_status',
-    //         'designation_code_status', 'rm_employee_id_status', 'rm_designation_code_status', 'state_code_status', 'employee_distributor_codes_status', 'employee_distributor_mapping_status',
-    //         'dsr_distributor_mapping_status', 'beat_employee_mapping_status', 'supplier_distributor_mapping_status', 'outlet_sync_csp_status', 'outlet_lead_creation_status', 'outlet_lead_approval_status',
-    //         'regional_price_status', 'opening_stock_status', 'grn_invoice_status', 'sales_order_status', 'opening_points_status'])) {
-    //         $siteReady->$field = $siteReady->$field ? 0 : 1;
-    //         $siteReady->save();
-    //         return response()->json([
-    //             'status'  => 200,
-    //             'message' => ucfirst(str_replace('_', ' ', $field)) . ' updated successfully'
-    //         ]);
-    //     }
-    // }
-    public function siteStatus($slot_booking_id, $field, Request $request)
-    {
-        // find or create
-        $form = SiteReadinessForm::firstOrCreate(
-            ['slot_booking_id' => $slot_booking_id],
-            ['distributor_code_status' => $distributor_code_status] // default values auto taken from migration (1 or 0)
-        );
+    public function siteStatus($slot_booking_id, $field, Request $request){
+       try{
+            // Find or create the SiteReadinessForm record
+            $form = SiteReadinessForm::firstOrCreate(
+                ['slot_booking_id'  => $slot_booking_id]
+            );
+            $status = $request->input('status');
+            $form->update([$field => $status]);
 
-        // toggle the field
-        $form->$field = $request->status ? 1 : 0;
-        $form->save();
-
-        return response()->json(['success' => true, 'new_value' => $form->$field]);
+            return response()->json([
+                'status'    => 200,
+                'message'   => ucfirst(str_replace('_', ' ', $field)) . 
+                                        ($status ? ' enabled successfully' : ' disabled successfully'),
+        ]);
+       } catch(\Exception $e) {
+            return response()->json([
+                'status'    => 500,
+                'message'   => 'Something went wrong: ' . $e->getMessage(),
+            ]);
+       }
     }
+
 
 }

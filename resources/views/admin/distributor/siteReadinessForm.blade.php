@@ -33,13 +33,13 @@
                 <tr>
                     <td rowspan="12" class="align-middle">Distributor Creation</td>
                     <td>Distributor Code (SAP)</td>
-                    <td><input type="text" name="distributor_code" class="form-control"></td>
+                    <td><input type="text" name="distributor_code" class="form-control" value="{{ ucwords($slot->distributor_code) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->distributor_code_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'distributor_code_status']) }}', this)">
+                                {{ optional($siteReady)->distributor_code_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'distributor_code_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -48,10 +48,10 @@
                     <td><input type="text" name="distributor_name" class="form-control" value="{{ ucwords($slot->distributor_name) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->distributor_name_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'distributor_name_status']) }}', this)">
+                                {{ optional($siteReady)->distributor_name_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'distributor_name_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -60,10 +60,10 @@
                     <td><textarea name="full_address" class="form-control" readonly> {{ ucwords($slot->distributor_address)}}</textarea></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->full_address_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'full_address_status']) }}', this)">
+                                {{ optional($siteReady)->full_address_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'full_address_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -72,10 +72,10 @@
                     <td><input type="text" name="office_phone_no_status" class="form-control" value="{{ $slot->distributor_contact_no }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->office_phone_no_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'office_phone_no_status']) }}', this)">
+                                {{ optional($siteReady)->office_phone_no_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'office_phone_no_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -85,47 +85,47 @@
                     <td><input type="text" name="distributor_email" class="form-control" value="{{ $slot->distributor_email }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->distributor_email_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'distributor_email_status']) }}', this)">
+                                {{ optional($siteReady)->distributor_email_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'distributor_email_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
 
                 <tr>
                     <td>City</td>
-                    <td><input type="text" name="city" class="form-control"></td>
+                    <td><input type="text" name="city" class="form-control" value="{{ ucwords($slot->city) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->city_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'city_status']) }}', this)">
+                                {{ optional($siteReady)->city_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'city_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>State</td>
-                    <td><input type="text" name="state" class="form-control"></td>
+                    <td><input type="text" name="state" class="form-control" value="{{ ucwords($slot->state) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->state_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'state_status']) }}', this)">
+                                {{ optional($siteReady)->state_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'state_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>Zone</td>
-                    <td><input type="text" name="zone" class="form-control"></td>
+                    <td><input type="text" name="zone" class="form-control" value="{{ ucwords($slot->zone) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->zone_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'zone_status']) }}', this)">
+                                {{ optional($siteReady)->zone_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'zone_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -134,10 +134,10 @@
                     <td><input type="text" name="gst_number" class="form-control" value="{{ $slot->gst_number}}"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->gst_number_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'gst_number_status']) }}', this)">
+                                {{ optional($siteReady)->gst_number_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'gst_number_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -146,60 +146,60 @@
                     <td><input type="text" name="pan_number" class="form-control" value="{{ $slot->pan_number }}"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->pan_number_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'pan_number_status']) }}', this)">
+                                {{ optional($siteReady)->pan_number_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'pan_number_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>Distributor Contact Person (Optional)</td>
-                    <td><input type="text" name="contact_person" class="form-control"></td>
+                    <td><input type="text" name="contact_person" class="form-control" value="{{ ucwords($slot->distributor_contact_person) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->contact_person_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'contact_person_status']) }}', this)">
+                                {{ optional($siteReady)->contact_person_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'contact_person_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td>Distributor Contact Person Phone no (Optional)</td>
-                    <td><input type="text" name="contact_person_phone_no_status" class="form-control"></td>
+                    <td><input type="text" name="contact_person_phone" class="form-control" value="{{ ucwords($slot->distributor_contact_person_phone) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->contact_person_phone_no_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'contact_person_phone_no_status']) }}', this)">
+                                {{ optional($siteReady)->contact_person_phone_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'contact_person_phone_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>SO Name (Optional)</td>
-                    <td><input type="text" name="so_name" class="form-control"></td>
+                    <td><input type="text" name="so_name" class="form-control" value="{{ ucwords($slot->so_name) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->so_name_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'so_name_status']) }}', this)">
+                                {{ optional($siteReady)->so_name_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'so_name_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
                 <tr>
                     <td></td>
                     <td>SO Contact Number (Optional)</td>
-                    <td><input type="text" name="so_contact_number" class="form-control"></td>
+                    <td><input type="text" name="so_contact_number" class="form-control" value="{{ ucwords($slot->so_contact_no) }}" readonly></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->so_contact_number_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'so_contact_number_status']) }}', this)">
+                                {{ optional($siteReady)->so_contact_number_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'so_contact_number_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -213,10 +213,10 @@
                     <td><input type="text" name="brands" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->brands_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'brands_status']) }}', this)">
+                                {{ optional($siteReady)->brands_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'brands_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -225,10 +225,10 @@
                     <td><input type="text" name="beat_name" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->beat_name_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'beat_name_status']) }}', this)">
+                                {{ optional($siteReady)->beat_name_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'beat_name_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -237,10 +237,10 @@
                     <td><input type="text" name="beat_id" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->beat_id_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'beat_id_status']) }}', this)">
+                                {{ optional($siteReady)->beat_id_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'beat_id_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -254,10 +254,10 @@
                     </td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->beat_type_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'beat_type_status']) }}', this)">
+                                {{ optional($siteReady)->beat_type_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'beat_type_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -266,10 +266,10 @@
                     <td><input type="text" name="region_code" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->region_code_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'region_code_status']) }}', this)">
+                                {{ optional($siteReady)->region_code_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'region_code_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -278,10 +278,10 @@
                     <td><input type="text" name="region_name" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->region_name_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'region_name_status']) }}', this)">
+                                {{ optional($siteReady)->region_name_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'region_name_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -291,10 +291,10 @@
                     <td><input type="text" name="beat_distributor_codes" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->beat_distributor_codes_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'beat_distributor_codes_status']) }}', this)">
+                                {{ optional($siteReady)->beat_distributor_codes_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'beat_distributor_codes_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -309,10 +309,10 @@
                     <td><input type="text" name="employee_id" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->employee_id_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'employee_id_status']) }}', this)">
+                                {{ optional($siteReady)->employee_id_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'employee_id_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -321,10 +321,10 @@
                     <td><input type="text" name="employee_label" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->employee_label_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'employee_label_status']) }}', this)">
+                                {{ optional($siteReady)->employee_label_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'employee_label_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -333,10 +333,10 @@
                     <td><input type="text" name="employee_name" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->employee_name_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'employee_name_status']) }}', this)">
+                                {{ optional($siteReady)->employee_name_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'employee_name_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -345,10 +345,10 @@
                     <td><input type="text" name="designation_code" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->designation_code_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'designation_code_status']) }}', this)">
+                                {{ optional($siteReady)->designation_code_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'designation_code_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -357,10 +357,10 @@
                     <td><input type="text" name="rm_employee_id" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->rm_employee_id_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'rm_employee_id_status']) }}', this)">
+                                {{ optional($siteReady)->rm_employee_id_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'rm_employee_id_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -369,10 +369,10 @@
                     <td><input type="text" name="rm_designation_code" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->rm_designation_code_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'rm_designation_code_status']) }}', this)">
+                                {{ optional($siteReady)->rm_designation_code_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'rm_designation_code_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -381,10 +381,10 @@
                     <td><input type="text" name="state_code" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->state_code_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'state_code_status']) }}', this)">
+                                {{ optional($siteReady)->state_code_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'state_code_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -393,10 +393,10 @@
                     <td><input type="text" name="employee_distributor_codes" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->employee_distributor_codes_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'employee_distributor_codes_status']) }}', this)">
+                                {{ optional($siteReady)->employee_distributor_codes_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'employee_distributor_codes_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -412,10 +412,10 @@
                     <td><input type="text" name="employee_distributor_mapping" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->employee_distributor_mapping_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'employee_distributor_mapping_status']) }}', this)">
+                                {{ optional($siteReady)->employee_distributor_mapping_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'employee_distributor_mapping_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -424,10 +424,10 @@
                     <td><input type="text" name="dsr_distributor_mapping" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->dsr_distributor_mapping_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'dsr_distributor_mapping_status']) }}', this)">
+                                {{ optional($siteReady)->dsr_distributor_mapping_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'dsr_distributor_mapping_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -436,10 +436,10 @@
                     <td><input type="text" name="beat_employee_mapping" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->beat_employee_mapping_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'beat_employee_mapping_status']) }}', this)">
+                                {{ optional($siteReady)->beat_employee_mapping_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'beat_employee_mapping_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -449,10 +449,10 @@
                     <td><input type="text" name="supplier_distributor_mapping" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->supplier_distributor_mapping_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'supplier_distributor_mapping_status']) }}', this)">
+                                {{ optional($siteReady)->supplier_distributor_mapping_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'supplier_distributor_mapping_status']) }}', this)">
                         </div>
                     </td>
                    
@@ -463,10 +463,10 @@
                     <td><input type="text" name="outlet_sync_csp" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->outlet_sync_csp_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'outlet_sync_csp_status']) }}', this)">
+                                {{ optional($siteReady)->outlet_sync_csp_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'outlet_sync_csp_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -481,10 +481,10 @@
                     <td><input type="text" name="outlet_lead_creation" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->outlet_lead_approval_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'outlet_lead_creation_status']) }}', this)">
+                                {{ optional($siteReady)->outlet_lead_approval_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'outlet_lead_creation_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -493,10 +493,10 @@
                     <td><input type="text" name="outlet_lead_approval" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->outlet_lead_approval_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'outlet_lead_approval_status']) }}', this)">
+                                {{ optional($siteReady)->outlet_lead_approval_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'outlet_lead_approval_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -511,10 +511,10 @@
                     <td><input type="text" name="regional_price" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->regional_price_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'regional_price_status']) }}', this)">
+                                {{ optional($siteReady)->regional_price_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'regional_price_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -529,10 +529,10 @@
                     <td><input type="text" name="opening_stock" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->opening_stock_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'opening_stock_status']) }}', this)">
+                                {{ optional($siteReady)->opening_stock_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'opening_stock_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -547,10 +547,10 @@
                     <td><input type="text" name="grn_invoice" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->grn_invoice_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'grn_invoice_status']) }}', this)">
+                                {{ optional($siteReady)->grn_invoice_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'grn_invoice_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -565,10 +565,10 @@
                     <td><input type="text" name="sales_order" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->sales_order_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'sales_order_status']) }}', this)">
+                                {{ optional($siteReady)->sales_order_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'sales_order_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
@@ -583,19 +583,19 @@
                     <td><input type="text" name="opening_points" class="form-control"></td>
                     <td></td>
                     <td>
-                        <div class="form-check form-switch">
+                        <div class="form-check">
                             <input class="form-check-input" type="checkbox"
-                                {{ $siteReady->opening_points_status ? 'checked' : '' }}
-                                onclick="statusToggle('{{ route('admin.client.siteStatus', ['id' => $siteReady->id, 'field' => 'opening_points_status']) }}', this)">
+                                {{ optional($siteReady)->opening_points_status ? 'checked' : '' }}
+                                onclick="statusToggleSiteReady('{{ route('admin.client.siteStatus', ['slot_booking_id' => $slot->id, 'field' => 'opening_points_status']) }}', this)">
                         </div>
                     </td>
                 </tr>
             </tbody>
         </table>
 
-        <div class="text-center mt-3">
+        {{-- <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary px-5">Save Checklist</button>
-        </div>
+        </div> --}}
     </form>
 </div>
 

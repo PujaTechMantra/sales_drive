@@ -32,6 +32,28 @@ function statusToggle(route) {
     });
 }
 
+
+function statusToggleSiteReady(route, checkbox) {
+    let status = checkbox.checked ? 1 : 0;
+
+    $.ajax({
+        url: route + '?status=' + status,  
+        type: 'GET',
+        success: function(resp) {
+            if (resp.status == 200) {
+                toastFire('success', resp.message);
+            } else {
+                toastFire('error', resp.message);
+            }
+        },
+        error: function(xhr) {
+            toastFire('error', 'Something went wrong');
+            console.log(xhr.responseText);
+        }
+    });
+}
+
+
 //for site ready toggle
 function statusSiteReadyToggle(route) {
     $.ajax({

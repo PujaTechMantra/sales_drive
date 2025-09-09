@@ -67,6 +67,66 @@
                         @error('gst_number') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3"><label>Distributor Code(SAP)</label>
+                            <input type="text" name="distributor_code[]" id="distributor_code" class="form-control">
+                        </div>
+                        @error('distributor_code') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="col-md-6">                
+                        <div class="mb-3"><label>Distributor Contact Person(optional)</label>
+                            <input type="text" name="distributor_contact_person[]" id="distributor_contact_person" class="form-control">
+                        </div>
+                        @error('distributor_contact_person') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3"><label>Distributor Contact Person Phone No(optional)</label>
+                            <input type="text" name="distributor_contact_person_phone[]" id="distributor_contact_person_phone" class="form-control">
+                        </div>
+                        @error('distributor_contact_person_phone') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="col-md-6">                
+                        <div class="mb-3"><label>Zone</label>
+                            <input type="text" name="zone[]" id="zone" class="form-control">
+                        </div>
+                        @error('zone') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3"><label>City</label>
+                            <input type="text" name="city[]" id="city" class="form-control">
+                        </div>
+                        @error('city') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="col-md-6">                
+                        <div class="mb-3"><label>State</label>
+                            <input type="text" name="state[]" id="state" class="form-control">
+                        </div>
+                        @error('state') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3"><label>SO Name (optional)</label>
+                            <input type="text" name="so_name[]" id="so_name" class="form-control">
+                        </div>
+                        @error('so_name') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="col-md-6">                
+                        <div class="mb-3"><label>SO Contact No (optional)</label>
+                            <input type="text" name="so_contact_no[]" id="so_contact_no" class="form-control">
+                        </div>
+                        @error('so_contact_no') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                </div>
                 
             </div>
         </div>
@@ -159,10 +219,17 @@
                 return;
             }
             let newSection = $('.distributor-section:first').clone();
-            newSection.find("input").val(""); 
+
+            // Clear input values
+            newSection.find("input").val("");
+
+            // Remove old validation errors
+            newSection.find(".text-danger").remove();
+
             $('#distributorContainer').append(newSection);
             currentAdded++;
         });
+
 
         $(document).on('click', '.removeDistributor', function() {
             $(this).closest('.distributor-section').remove();

@@ -22,11 +22,11 @@
         font-weight: bold;
     }
     .form-check-input:checked + .form-check-label::after {
-        content: "YES";
+        content: "COMPLETE";
         color: green;
     }
     .form-check-input:not(:checked) + .form-check-label::after {
-        content: "NO";
+        content: "PENDING";
         color: red;
     }
 </style>
@@ -78,6 +78,7 @@
                         <th>Slot Date</th>
                         <th>Site Ready</th>
                         <th>Training Status</th>
+                        <th>Training complete status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -87,11 +88,19 @@
                             <td>{{ ucwords($d->distributor_name) }}</td>
                             <td>
                                 <ul>
+                                    <li>Distributor Code: {{$d->distributor_code}}</li>
                                     <li>Address: {{ ucwords($d->distributor_address) }}</li>
+                                    <li>City: {{ ucwords($d->city) }}</li>
+                                    <li>State: {{ ucwords($d->state) }}</li>
+                                    <li>Zone: {{ ucwords($d->zone) }}</li>
                                     <li>Contact: {{ $d->distributor_contact_no }}</li>
                                     <li>Email: {{ $d->distributor_email }}</li>
                                     <li>PAN:{{ $d->pan_number}}</li>
                                     <li>GST:{{ $d->gst_number }}</li>
+                                    <li>Distributor Contact person:{{ $d->distributor_contact_person ? $d->distributor_contact_person : 'NA'}}</li>
+                                    <li>Distributor Contact person Phone:{{ $d->distributor_contact_person_phone ? $d->distributor_contact_person_phone : 'NA' }}</li>
+                                    <li>SO Name:{{ $d->so_name ? $d->so_name : 'NA' }}</li>
+                                    <li>SO Contact:{{ $d->so_contact_no ? $d->so_contact_no : 'NA'}}</li>
                                 </ul>
                             </td>
                             <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
@@ -109,7 +118,7 @@
                             </td>
                             <td>
                                 @if($d->user && $d->user->training_status == 0)
-                                    <span class="badge bg-danger rounded-pill px-3 py-2">NO</span>
+                                    <span class="badge bg-danger rounded-pill px-3 py-2">PENDING</span>
                                     <button type="button" class="btn btn-sm btn-outline-primary rounded-circle trainingViewRemarksBtn"
                                         data-bs-toggle="modal" data-bs-target="#trainingRemarksModal"
                                         data-remarks="{{ $d->training_remarks}}" title="Remarks"><i class="ri-eye-line ri-15px"></i>
@@ -118,18 +127,25 @@
                                     @if($d->site_ready)
                                         <div class="form-check form-switch" data-bs-toggle="tooltip">
                                             <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
-                                                {{ $d->site_ready ? 'checked' : '' }}
+                                                {{ $d->training_done ? 'checked' : '' }}
                                                 onclick="statusToggle('{{route('client.trainingDone', $d->id)}}', this)">
                                             <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
                                         </div>
                                         
-                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-3" 
-                                                data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
-                                                data-remarks="{{ $d->training_remarks }}">Training Remarks
+                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
+                                            data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
+                                            data-remarks="{{ $d->training_remarks }}">Training Remarks
                                         </button>
                                     @else
                                         <h8>Waiting for site ready...</h8>                                        
                                     @endif
+                                @endif
+                            </td>
+                            <td>
+                                @if($d->site_ready == 1 && $d->training_done == 1)
+                                    <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
+                                @else
+                                    <span class="badge bg-danger rounded-pill px-3 py-2">FAILED</span>
                                 @endif
                             </td>
                         </tr>
