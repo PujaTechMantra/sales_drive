@@ -82,7 +82,20 @@ class SlotBookingController extends Controller
             'so_name.*'                     => 'nullable|string|max:155',
             'so_contact_no.*'               => 'nullable|digits:10',
             'slot_date'                     => 'required|date',
-            
+            // 'slot_start_time'               => 'nullable|date_format:H:i',
+            'slot_start_time'               => [
+                'required', 'date_format:H:i',
+                function($attribute, $value, $fail) use ($request) {
+                    $allowed = [
+                        '11:00' => '13:00',
+                        '15:00' => '17:00',
+                    ];
+                    if(!isset($allowed[$value]) || $request->slot_end_time != $allowed[$value]){
+                        $fail("Only slots 11:00-13:00 or 15:00-17:00 are allowed.");
+                    }
+                }
+            ],
+            'slot_end_time'                 => 'required|date_format:H:i|after:slot_strat_time',                 
         ],[
             // Distributor Name
             'distributor_name.*.required' => 'Distributor name is required.',
@@ -131,13 +144,19 @@ class SlotBookingController extends Controller
              //Zone
             'zone.*.required' => 'Zone is required.',
             'zone.*.string'   => 'Zone must be valid text.',
-            'zone.*.max'      => 'Zone should not exceed 30 characters.',
-
-          
+            'zone.*.max'      => 'Zone should not exceed 30 characters.',  
 
             // Slot Date
             'slot_date.required' => 'Slot date is required.',
             'slot_date.date'     => 'Slot date must be a valid date.',
+
+            // Slot Time
+            'slot_start_time.required'      => 'Slot start time is required.',
+            'slot_start_time.date_format'   => 'Slot start time must be in 24-hour format (HH:MM).',
+
+            'slot_end_time.required'    => 'Slot end time is required.',
+            'slot_end_time.date_format' => 'Slot end time must be in 24-hour format (HH:MM).',
+            'slot_end_time.after'       => 'Slot end time must be greater than slot start time.',
         ]);
         $slotDate = Carbon::parse($request->slot_date);
 
@@ -171,6 +190,8 @@ class SlotBookingController extends Controller
                 'so_name'               => $request->so_name[$index],
                 'so_contact_no'         => $request->so_contact_no[$index],
                 'slot_date'             => $slotDate,
+                'slot_start_time'       => $request->slot_start_time ?? null,
+                'slot_end_time'         => $request->slot_end_time ?? null,
             ]);
         }
 

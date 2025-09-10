@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::table('slot_bookings', function (Blueprint $table) {
             //
-            $table->tinyInteger('training_status')->default(0)->comment('1: active | 0: inactive')->after('status');
+            $table->time('slot_start_time')->after('slot_date');
+            $table->time('slot_end_time')->after('slot_start_time');
         });
     }
 
@@ -24,6 +25,9 @@ return new class extends Migration
     {
         Schema::table('slot_bookings', function (Blueprint $table) {
             //
+            $table->dropColumn([
+                'slot_start_time', 'slot_end_time'
+            ]);
         });
     }
 };

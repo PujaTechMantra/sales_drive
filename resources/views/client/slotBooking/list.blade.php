@@ -76,6 +76,7 @@
                         <th>Distributor Name</th>
                         <th>Distributor Details</th>
                         <th>Slot Date</th>
+                        <th>Slot Time</th>
                         <th>Site Ready</th>
                         <th>Training Status</th>
                         <th>Training complete status</th>
@@ -104,6 +105,8 @@
                                 </ul>
                             </td>
                             <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
+                            <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
+
                             <td>
                                 @if($d->site_ready == 1)
                                     <span class="badge bg-success rounded-pill px-3 py-2">YES</span>

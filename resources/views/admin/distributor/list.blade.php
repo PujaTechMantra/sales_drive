@@ -100,6 +100,7 @@
                         <th>Distributor Name</th>
                         <th>Distributor Details</th>
                         <th>Slot Date</th>
+                        <th>Slot Time</th>
                         <th>Site Ready</th>
                         <th>Training Status</th>
                         <th>Training complete status</th>
@@ -129,6 +130,7 @@
                                 </ul>
                             </td>
                             <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
+                            <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
                             <td>
                                 {{-- <button type="button">Site readiness form</button> --}}
                                 <a href="{{ route('admin.client.siteReadinessForm', $d->id)}}" target="_blank" 

@@ -14,11 +14,23 @@
             <input type="text" class="form-control" value="{{ ucwords($client->name) }}" readonly>
         </div>
 
-        <div class="form-group mb-3">
-            <label for="slot_date" class="form-label">Select Slot Date</label>
-            <input type="text" class="form-control" name="slot_date" id="slot_date" placeholder="Select slot date" autocomplete="off">
+        <div class="row d-flex">
+            <div class="col-md-4 mb-3">
+                <label for="slot_date" class="form-label">Slot Date</label>
+                <input type="text" class="form-control" name="slot_date" id="slot_date" placeholder="Select slot date" autocomplete="off">
+                <small id="slot_msg" class="d-block mt-1"></small>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="slot_start_time">Slot Start Time</label>
+                <input type="time" id="slot_start_time" name="slot_start_time" class="form-control" value="">
+                @error('slot_start_time') <p class="text-danger small">{{ $message }}</p> @enderror
+            </div>
+            <div class="col-md-4 mb-3">
+                <label for="slot_end_time">Slot End Time</label>
+                <input type="time" id="slot_end_time" name="slot_end_time" class="form-control" value="">
+                @error('slot_end_time') <p class="text-danger small">{{ $message }}</p> @enderror
+            </div>
 
-            <small id="slot_msg" class="d-block mt-1"></small>
         </div>
         <div id="distributorContainer">
             {{-- <div id="distributorSection" style="display:none;"> --}}
@@ -26,41 +38,46 @@
                 <button type="button" class="btn btn-sm btn-danger removeDistributor position-absolute top-0 end-0 m-0"  style="display:none;">✖ </button>
                     
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <div class="mb-3"><label>Distributor Code(SAP)</label>
+                            <input type="text" name="distributor_code[]" id="distributor_code" class="form-control">
+                        </div>
+                        @error('distributor_code') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="col-md-4">
                         <div class="mb-3"><label>Distributor Name</label>
                         <input type="text" name="distributor_name[]" id="distributor_name" class="form-control"></div>
                         @error('distributor_name') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
-                    <div class="col-md-6">
-                        <div class="mb-3"><label>Distributor Address</label>
-                        <input type="text" name="distributor_address[]" id="distributor_address" class="form-control"></div>
+                    <div class="col-md-4">
+                        <div class="mb-3"><label>Full Address</label>
+                            {{-- <input type="text" name="distributor_address[]" id="distributor_address" class="form-control"> --}}
+                            <textarea name="distributor_address[]" id="distributor_address" rows="2" class="form-control"></textarea>
+                        </div>                        
                         @error('distributor_address') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3"><label>Distributor Contact No</label>
+                    <div class="col-md-3">
+                        <div class="mb-3"><label>Distributor Phone No</label>
                             <input type="text" name="distributor_contact_no[]" id="distributor_contact_no" class="form-control">
                         </div>
                         @error('distributor_contact_no') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
-                    <div class="col-md-6">                
-                        <div class="mb-3"><label>Distributor Email</label>
+                    <div class="col-md-3">                
+                        <div class="mb-3"><label>Distributor Email ID</label>
                             <input type="email" name="distributor_email[]" id="distributor_email" class="form-control">
                         </div>
                         @error('distributor_email') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <div class="mb-3"><label>Distributor Pan Number</label>
                             <input type="text" name="pan_number[]" id="pan_number" class="form-control">
                         </div>
                         @error('pan_number') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
-                    <div class="col-md-6">                
+                    <div class="col-md-3">                
                         <div class="mb-3"><label>Distributor GST Number</label>
                             <input type="text" name="gst_number[]" id="gst_number" class="form-control">
                         </div>
@@ -69,28 +86,19 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3"><label>Distributor Code(SAP)</label>
-                            <input type="text" name="distributor_code[]" id="distributor_code" class="form-control">
+                    <div class="col-md-4">
+                        <div class="mb-3"><label>City</label>
+                            <input type="text" name="city[]" id="city" class="form-control">
                         </div>
-                        @error('distributor_code') <p class="text-danger small">{{ $message }}</p> @enderror
+                        @error('city') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
-                    <div class="col-md-6">                
-                        <div class="mb-3"><label>Distributor Contact Person(optional)</label>
-                            <input type="text" name="distributor_contact_person[]" id="distributor_contact_person" class="form-control">
+                    <div class="col-md-4">                
+                        <div class="mb-3"><label>State</label>
+                            <input type="text" name="state[]" id="state" class="form-control">
                         </div>
-                        @error('distributor_contact_person') <p class="text-danger small">{{ $message }}</p> @enderror
+                        @error('state') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3"><label>Distributor Contact Person Phone No(optional)</label>
-                            <input type="text" name="distributor_contact_person_phone[]" id="distributor_contact_person_phone" class="form-control">
-                        </div>
-                        @error('distributor_contact_person_phone') <p class="text-danger small">{{ $message }}</p> @enderror
-                    </div>
-                    <div class="col-md-6">                
+                    <div class="col-md-4">                
                         <div class="mb-3"><label>Zone</label>
                             <input type="text" name="zone[]" id="zone" class="form-control">
                         </div>
@@ -98,21 +106,21 @@
                     </div>
                 </div>
 
+
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3"><label>City</label>
-                            <input type="text" name="city[]" id="city" class="form-control">
-                        </div>
-                        @error('city') <p class="text-danger small">{{ $message }}</p> @enderror
-                    </div>
                     <div class="col-md-6">                
-                        <div class="mb-3"><label>State</label>
-                            <input type="text" name="state[]" id="state" class="form-control">
+                        <div class="mb-3"><label>Distributor Contact Person (optional)</label>
+                            <input type="text" name="distributor_contact_person[]" id="distributor_contact_person" class="form-control">
                         </div>
-                        @error('state') <p class="text-danger small">{{ $message }}</p> @enderror
+                        @error('distributor_contact_person') <p class="text-danger small">{{ $message }}</p> @enderror
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3"><label>Distributor Contact Person Phone No (optional)</label>
+                            <input type="text" name="distributor_contact_person_phone[]" id="distributor_contact_person_phone" class="form-control">
+                        </div>
+                        @error('distributor_contact_person_phone') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-6">
                         <div class="mb-3"><label>SO Name (optional)</label>
@@ -121,7 +129,7 @@
                         @error('so_name') <p class="text-danger small">{{ $message }}</p> @enderror
                     </div>
                     <div class="col-md-6">                
-                        <div class="mb-3"><label>SO Contact No (optional)</label>
+                        <div class="mb-3"><label>SO Contact Number (optional)</label>
                             <input type="text" name="so_contact_no[]" id="so_contact_no" class="form-control">
                         </div>
                         @error('so_contact_no') <p class="text-danger small">{{ $message }}</p> @enderror
@@ -169,7 +177,7 @@
         });
     });
      
-
+    
     $(document).ready(function(){
         let maxSlots = 0;
         let bookedCount = 0;
@@ -219,6 +227,9 @@
                 return;
             }
             let newSection = $('.distributor-section:first').clone();
+
+            //textarea
+            newSection.find("textarea").val("");
 
             // Clear input values
             newSection.find("input").val("");
