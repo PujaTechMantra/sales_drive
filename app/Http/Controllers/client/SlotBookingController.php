@@ -96,7 +96,38 @@ class SlotBookingController extends Controller
                 }
             ],
             'slot_end_time'                 => 'required|date_format:H:i|after:slot_strat_time',                 
-        ],[
+        ],
+        // $request->validate([
+        //     'slot_date'                     => 'required|date',
+        //     'slot_start_time'               => [
+        //         'required', 'date_format:H:i',
+        //         function($attribute, $value, $fail) use ($request) {
+        //             $allowed = [
+        //                 '11:00' => '13:00',
+        //                 '15:00' => '17:00',
+        //             ];
+        //             if(!isset($allowed[$value]) || $request->slot_end_time != $allowed[$value]){
+        //                 $fail("Only slots 11:00-13:00 or 15:00-17:00 are allowed.");
+        //             }
+        //         },
+        //     ],
+        //     'slot_end_time'                     => 'required|date_format:H:i', 
+        //     'distributors'                      => 'required|array|min:1',
+        //     'distributors.*.distributor_code'   => 'required|string|max:50',
+        //     'distributors.*.distributor_name'   => 'required|string|max:155',
+        //     'distributors.*.distributor_address'        => 'required|string|max:255',
+        //     'distributors.*.distributor_contact_no'     => 'required|string|max:10',
+        //     'distributors.*.gst_number'         => 'required|string|max:15',
+        //     'distributors.*.pan_number'         => 'required|string|max:10',
+        //     'distributors.*.city'               => 'required|string|max:30',
+        //     'distributors.*.state'              => 'required|string|max:30',
+        //     'distributors.*.zone'               => 'required|string|max:30',
+        //     'distributors.*.distributor_contact_person'         => 'required|string|max:155',
+        //     'distributors.*.distributor_contact_person_phone'   => 'required|string|max:10',
+        //     'distributors.*.so_name'            => 'required|string|max:155',
+        //     'distributors.*.so_contact_no'      => 'required|string|max:10',
+        // ],
+        [
             // Distributor Name
             'distributor_name.*.required' => 'Distributor name is required.',
             'distributor_name.*.string'   => 'Distributor name must be valid text.',

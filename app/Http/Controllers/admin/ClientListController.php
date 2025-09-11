@@ -152,18 +152,16 @@ class ClientListController extends Controller
         ]);
     }
     
-    public function saveRemarks(Request $request){
+    public function savesiteReadyRemarks(Request $request){
         $request->validate([
             'remarks'   => 'nullable|string|max:1000',
         ]);
-
         $slot = SlotBooking::findOrFail($request->id);
         $slot->remarks = $request->remarks;
         $slot->save();
 
-        return redirect()->back()->with('sucess', 'Remarks added successfully');
+        return redirect()->route('admin.slot-booking.distributorList')->with('success', 'Site ready Remarks added successfully');
     }
-
 
     public function trainingDone($id) {
         $training = SlotBooking::findOrFail($id);
@@ -171,11 +169,11 @@ class ClientListController extends Controller
         $training->save();
         return response()->json([
             'status'    => 200,
-            'message'   => 'Training status changed'
+            'message'   => 'Status changed for training done'
         ]);
     }
 
-    public function saveRemarksTraining(Request $request) {
+    public function savetrainingRemarks(Request $request) {
         //dd($request->all());
         $request->validate([
             'training_remarks'  => 'nullable|string|max:1000',

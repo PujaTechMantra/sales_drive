@@ -29,19 +29,20 @@
     }
 
 </style>
-@if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
 
-<div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h3>Distributor List</h3>
+
+<div class="container my-4">
+    @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="card-body">
+    @endif
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4 d-flex justify-content-between align-items-center h-50">
+            <h4 class="mb-0">Distributor List</h4>
+        </div>
+        <div class="card-body p-4">
             <form method="GET" action="{{ route('admin.slot-booking.distributorList') }}">
                 <div class="row mb-3">
                     
@@ -54,7 +55,7 @@
                                     value="{{ request()->input('keyword') }}" placeholder="Search" style=" width:200px; height: 5px">
                             </div>
                             {{-- search by client name  --}}
-                            <select name="client_id[]" id="client_id" class="chosen-select" style="min-width: 200px;" multiple data-placeholder="Select options...">
+                            <select name="client_id[]" id="client_id" class="chosen-select" style="min-width: 200px;" multiple data-placeholder="Select clients...">
                                 @foreach($clients as $client)
                                     <option value="{{ $client->id }}" 
                                         {{ is_array(request('client_id')) && in_array($client->id, request('client_id')) ? 'selected' : '' }}>
@@ -92,100 +93,102 @@
                     </div>
                 </div>
             </form>
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Client Name</th>
-                        <th>Distributor Name</th>
-                        <th>Distributor Details</th>
-                        <th>Slot Date</th>
-                        <th>Slot Time</th>
-                        <th>Site Ready</th>
-                        <th>Training Status</th>
-                        <th>Training complete status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($distributor as $index => $d)
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead class="table-light">
                         <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $d->user ? ucwords($d->user->name) : 'NA'}}</td>
-                            <td>{{ ucwords($d->distributor_name) }}</td>
-                             <td>
-                                <ul>
-                                    <li>Distributor Code: {{$d->distributor_code}}</li>
-                                    <li>Address: {{ ucwords($d->distributor_address) }}</li>
-                                    <li>City: {{ ucwords($d->city) }}</li>
-                                    <li>State: {{ ucwords($d->state) }}</li>
-                                    <li>Zone: {{ ucwords($d->zone) }}</li>
-                                    <li>Contact: {{ $d->distributor_contact_no }}</li>
-                                    <li>Email: {{ $d->distributor_email }}</li>
-                                    <li>PAN:{{ $d->pan_number}}</li>
-                                    <li>GST:{{ $d->gst_number }}</li>
-                                    <li>Distributor Contact person:{{ $d->distributor_contact_person ? $d->distributor_contact_person : 'NA'}}</li>
-                                    <li>Distributor Contact person Phone:{{ $d->distributor_contact_person_phone ? $d->distributor_contact_person_phone : 'NA' }}</li>
-                                    <li>SO Name:{{ $d->so_name ? $d->so_name : 'NA' }}</li>
-                                    <li>SO Contact:{{ $d->so_contact_no ? $d->so_contact_no : 'NA'}}</li>
-                                </ul>
-                            </td>
-                            <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
-                            <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
-                            <td>
-                                {{-- <button type="button">Site readiness form</button> --}}
-                                <a href="{{ route('admin.client.siteReadinessForm', $d->id)}}" target="_blank" 
-                                    class="btn btn-outline-warning btn-sm">Site Readiness Form
-                                </a>
-                                <div class="form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
-                                    <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
-                                        {{ $d->site_ready ? 'checked' : '' }}
-                                        onclick="statusSiteReadyToggle('{{route('admin.client.siteReady', $d->id)}}', this)">
-                                    <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
-                                </div>                            
-                                <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
-                                    data-bs-toggle="modal" data-bs-target="#remarksModal" data-id="{{ $d->id }}"
-                                    data-remarks="{{ $d->remarks }}">Remarks
-                                </button>
-                            </td>
-                            <td>
-                                @if($d->site_ready)
-                                    <div class="form-check form-switch" data-bs-toggle="tooltip">
+                            <th>#</th>
+                            <th>Client Name</th>
+                            <th>Distributor Name</th>
+                            <th>Distributor Details</th>
+                            <th>Slot Date</th>
+                            <th>Slot Time</th>
+                            <th>Site Ready</th>
+                            <th>Training Status</th>
+                            <th>Training complete status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse ($distributor as $index => $d)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $d->user ? ucwords($d->user->name) : 'NA'}}</td>
+                                <td>{{ ucwords($d->distributor_name) }}</td>
+                                <td>
+                                    <ul>
+                                        <li>Distributor Code: {{$d->distributor_code}}</li>
+                                        <li>Address: {{ ucwords($d->distributor_address) }}</li>
+                                        <li>City: {{ ucwords($d->city) }}</li>
+                                        <li>State: {{ ucwords($d->state) }}</li>
+                                        <li>Zone: {{ ucwords($d->zone) }}</li>
+                                        <li>Contact: {{ $d->distributor_contact_no }}</li>
+                                        <li>Email: {{ $d->distributor_email }}</li>
+                                        <li>PAN:{{ $d->pan_number}}</li>
+                                        <li>GST:{{ $d->gst_number }}</li>
+                                        <li>Distributor Contact person:{{ $d->distributor_contact_person ? $d->distributor_contact_person : 'NA'}}</li>
+                                        <li>Distributor Contact person Phone:{{ $d->distributor_contact_person_phone ? $d->distributor_contact_person_phone : 'NA' }}</li>
+                                        <li>SO Name:{{ $d->so_name ? $d->so_name : 'NA' }}</li>
+                                        <li>SO Contact:{{ $d->so_contact_no ? $d->so_contact_no : 'NA'}}</li>
+                                    </ul>
+                                </td>
+                                <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
+                                <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
+                                <td>
+                                    {{-- <button type="button">Site readiness form</button> --}}
+                                    <a href="{{ route('admin.client.siteReadinessForm', $d->id)}}" target="_blank" 
+                                        class="btn btn-outline-warning btn-sm">Site Readiness Form
+                                    </a>
+                                    <div class="form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
                                         <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
-                                            {{ $d->training_done ? 'checked' : '' }}
-                                            onclick="statusToggle('{{route('admin.client.trainingDone', $d->id)}}', this)">
+                                            {{ $d->site_ready ? 'checked' : '' }}
+                                            onclick="statusSiteReadyToggle('{{route('admin.client.siteReady', $d->id)}}', this)">
                                         <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
-                                    </div>
-                                    
+                                    </div>                            
                                     <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
-                                        data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
-                                        data-remarks="{{ $d->training_remarks }}">Training Remarks
+                                        data-bs-toggle="modal" data-bs-target="#remarksModal" data-id="{{ $d->id }}"
+                                        data-remarks="{{ $d->remarks }}">Remarks
                                     </button>
-                                @else
-                                    {{-- keep blank --}}
-                                @endif
-                            </td>
-                            <td>
-                                @if($d->site_ready == 1 && $d->training_done == 1)
-                                    <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
-                                @else
-                                    <span class="badge bg-danger rounded-pill px-3 py-2">FAILED</span>
-                                @endif
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">No distributors found for your account.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                                </td>
+                                <td>
+                                    @if($d->site_ready)
+                                        <div class="form-check form-switch" data-bs-toggle="tooltip">
+                                            <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
+                                                {{ $d->training_done ? 'checked' : '' }}
+                                                onclick="statusToggle('{{route('admin.client.trainingDone', $d->id)}}', this)">
+                                            <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
+                                        </div>
+                                        
+                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
+                                            data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" training-data-id="{{ $d->id }}"
+                                            data-training-remarks="{{ $d->training_remarks }}">Training Remarks
+                                        </button>
+                                    @else
+                                        {{-- keep blank --}}
+                                    @endif
+                                </td>
+                                <td>
+                                    @if($d->site_ready == 1 && $d->training_done == 1)
+                                        <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
+                                    @else
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">FAILED</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center text-muted">No distributors found for your account.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
             {{ $distributor->links() }}
         </div>
        
         <!-- Site ready Remarks Modal -->
         <div class="modal fade" id="remarksModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
-                <form action="{{ route('admin.client.saveRemarks') }}" method="POST">
+                <form action="{{ route('admin.client.savesiteReadyRemarks') }}" method="POST">
                     @csrf
                     <input type="hidden" name="id" id="slot_id"> 
                     <div class="modal-content">
@@ -207,7 +210,7 @@
         <!-- Training Remarks Modal -->
         <div class="modal fade" id="remarksTrainingModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
-                <form action="{{ route('admin.client.saveRemarksTraining') }}" method="POST">
+                <form action="{{ route('admin.client.savetrainingRemarks') }}" method="POST">
                     @csrf
                     <input type="hidden" name="id" id="training_slot_id">
                     <div class="modal-content">
@@ -280,8 +283,8 @@
         var remarksTrainingModal = document.getElementById('remarksTrainingModal');
         remarksTrainingModal.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget;
-            var trainingSlotId = button.getAttribute('data-id');
-            var trainingRemarks = button.getAttribute('data-remarks');
+            var trainingSlotId = button.getAttribute('training-data-id');
+            var trainingRemarks = button.getAttribute('data-training-remarks');
 
             document.getElementById('training_slot_id').value = trainingSlotId;
             document.getElementById('training_remarks_text').value = trainingRemarks ? trainingRemarks : '';

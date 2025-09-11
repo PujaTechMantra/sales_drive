@@ -22,15 +22,17 @@ class TrainingController extends Controller
         ]);
     }
 
-    public function saveRemarksTraining(Request $request) {
+    public function savetrainingRemarks(Request $request) {
         //dd($request->all());
         $request->validate([
             'training_remarks'  => 'nullable|string|max:1000',
         ]);
             $training = SlotBooking::findOrFail($request->id);
             $training->training_remarks = $request->training_remarks;
-            $training->save();
+            $training->save(); 
 
             return redirect()->route('client.slot-booking.distributorList')->with('success', 'Training remarks added successfully');    
     }
+
+
 }

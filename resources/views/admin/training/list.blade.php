@@ -119,7 +119,7 @@
         <!-- Training Remarks Modal -->
         <div class="modal fade" id="remarksTrainingModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
-                <form action="{{ route('admin.client.saveRemarksTraining') }}" method="POST">
+                <form action="{{ route('client.savetrainingRemarks') }}" method="POST">
                     @csrf
                     <input type="hidden" name="id" id="slot_id">
                     <div class="modal-content">

@@ -151,11 +151,11 @@ Route::prefix('admin')->group(function () {
             //master module/distributor, site ready, remarks
             Route::get('/distributor-list', [ClientListController::class, 'distributorList'])->name('admin.slot-booking.distributorList');
             Route::get('/site-ready/{id}', [ClientListController::class, 'siteReady'])->name('admin.client.siteReady');
-            Route::post('/save-remarks', [ClientListController::class, 'saveRemarks'])->name('admin.client.saveRemarks');
+            Route::post('/save-remarks-site-ready', [ClientListController::class, 'savesiteReadyRemarks'])->name('admin.client.savesiteReadyRemarks');
 
             //master module/distributor, training, remarks
             Route::get('training-done/{id}', [ClientListController::class, 'trainingDone'])->name('admin.client.trainingDone');
-            Route::post('/save-remarks-training', [ClientListController::class, 'saveRemarksTraining'])->name('admin.client.saveRemarksTraining');
+            Route::post('/save-remarks-training', [ClientListController::class, 'savetrainingRemarks'])->name('admin.client.savetrainingRemarks');
 
             Route::get('/export', [ClientListController::class, 'exportDistList'])->name('admin.client.exportDistList');
 
@@ -188,6 +188,6 @@ Route::middleware(['client', 'prevent-back-history'])->prefix('user')->group(fun
         Route::get('/distributor-list', [SlotBookingController::class, 'distributorList'])->name('client.slot-booking.distributorList');
 
         Route::get('training-done/{id}', [TrainingController::class, 'trainingDone'])->name('client.trainingDone');
-        Route::post('/save-remarks-training', [TrainingController::class, 'saveRemarksTraining'])->name('client.saveRemarksTraining');
+        Route::post('/save-remarks-training', [TrainingController::class, 'savetrainingRemarks'])->name('client.savetrainingRemarks');
     });
 });
