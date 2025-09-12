@@ -6,7 +6,7 @@
       {{--<span class="app-brand-logo demo me-1">
             @include('_partials.macros',["height"=>20])
             </span> --}}
-      <img src="{{asset('assets/img/tm-icon.jpg')}}" alt="logo" style="width: 60px; height: 50px; object-fit: cover;">
+      <img src="{{asset('assets/img/logo.png')}}" alt="logo" style="width: 60px; height: 50px; object-fit: cover;">
       <span class="app-brand-text demo menu-text fw-semibold ms-2">Sales Drive</span>
     </a>
 

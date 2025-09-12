@@ -39,11 +39,11 @@
                         <tbody>
                             {{-- Distributor Information --}}
                             <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start"><strong>Distributor Information</strong></td>
+                                <td colspan="5" class="fw-semibold text-center"><strong>Distributor Information</strong></td>
                             </tr>
 
                             <tr>
-                                <td rowspan="12" class="align-middle fw-semibold bg-light-subtle">Distributor Creation</td>
+                                <td rowspan="14" class="align-middle fw-semibold bg-light-subtle">Distributor Creation</td>
                                 <td>Distributor Code (SAP)</td>
                                 <td><input type="text" name="distributor_code" class="form-control" value="{{ ucwords($slot->distributor_code) }}" readonly></td>
                                 <td>
@@ -226,7 +226,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td></td>
                                 <td>SO Name (Optional)</td>
                                 <td><input type="text" name="so_name" class="form-control" value="{{ ucwords($slot->so_name) }}" readonly></td>
                                 <td>
@@ -242,7 +241,6 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td></td>
                                 <td>SO Contact Number (Optional)</td>
                                 <td><input type="text" name="so_contact_number" class="form-control" value="{{ ucwords($slot->so_contact_no) }}" readonly></td>
                                 <td>
@@ -259,12 +257,12 @@
                             </tr>
                             {{-- Master Data Requirement --}}
                             <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">Master Data Requirement</td>
+                                <td colspan="5" class="fw-semibold text-center">Master Data Requirement</td>
                             </tr>
                             <tr>
-                                <td rowspan="6" class="align-middle fw-semibold bg-light-subtle">Brand Mapping<br>Beat Creation</td>
+                                <td class="align-middle fw-semibold bg-light-subtle">Brand Mapping</td>
                                 <td>Mention all Brands</td>
-                                <td><input type="text" name="brands" class="form-control"></td>
+                                <td><input type="text" name="brands" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="brands_remarks" 
                                         value="{{ optional($siteReady)->brands_remarks }}" class="form-control"> 
@@ -278,8 +276,9 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td rowspan="6" class="align-middle fw-semibold bg-light-subtle">Beat Creation</td>
                                 <td>Beat Name</td>
-                                <td><input type="text" name="beat_name" class="form-control"></td>
+                                <td><input type="text" name="beat_name" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="beat_name_remarks" 
                                         value="{{ optional($siteReady)->beat_name_remarks }}" class="form-control"> 
@@ -294,7 +293,7 @@
                             </tr>
                             <tr>
                                 <td>Beat ID</td>
-                                <td><input type="text" name="beat_id" class="form-control"></td>
+                                <td><input type="text" name="beat_id" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="beat_id_remarks" 
                                         value="{{ optional($siteReady)->beat_id_remarks }}" class="form-control"> 
@@ -310,10 +309,7 @@
                             <tr>
                                 <td>Beat Type - Normal/Split</td>
                                 <td>
-                                    <select name="beat_type" class="form-select">
-                                        <option value="Normal">Normal</option>
-                                        <option value="Split">Split</option>
-                                    </select>
+                                    <input type="text" name="beat_type" class="form-control" readonly>
                                 </td>
                                 <td>
                                     <input type="text" name="beat_type_remarks" 
@@ -329,7 +325,7 @@
                             </tr>
                             <tr>
                                 <td>Region Code </td>
-                                <td><input type="text" name="region_code" class="form-control"></td>
+                                <td><input type="text" name="region_code" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="region_code_remarks" 
                                         value="{{ optional($siteReady)->region_code_remarks }}" class="form-control"> 
@@ -344,7 +340,7 @@
                             </tr>
                             <tr>
                                 <td>Region Name- In CSP</td>
-                                <td><input type="text" name="region_name" class="form-control"></td>
+                                <td><input type="text" name="region_name" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="region_name_remarks" 
                                         value="{{ optional($siteReady)->region_name_remarks }}" class="form-control"> 
@@ -358,9 +354,8 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td></td>
                                 <td>Distributor Codes</td>
-                                <td><input type="text" name="beat_distributor_codes" class="form-control"></td>
+                                <td><input type="text" name="beat_distributor_codes" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="beat_distributor_codes_remarks" 
                                         value="{{ optional($siteReady)->beat_distributor_codes_remarks }}" class="form-control"> 
@@ -375,13 +370,10 @@
                             </tr>
 
                             {{-- Employee List Creation --}}
-                            <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">Employee List Creation</td>
-                            </tr>
                             <tr>
                                 <td rowspan="8" class="align-middle fw-semibold bg-light-subtle">Employee List Creation</td>
                                 <td>Employee ID</td>
-                                <td><input type="text" name="employee_id" class="form-control"></td>
+                                <td><input type="text" name="employee_id" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="employee_id_remarks" 
                                         value="{{ optional($siteReady)->employee_id_remarks }}" class="form-control"> 
@@ -396,7 +388,7 @@
                             </tr>
                             <tr>
                                 <td>Employee Label</td>
-                                <td><input type="text" name="employee_label" class="form-control"></td>
+                                <td><input type="text" name="employee_label" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="employee_label_remarks" 
                                         value="{{ optional($siteReady)->employee_label_remarks }}" class="form-control">
@@ -411,7 +403,7 @@
                             </tr>
                             <tr>
                                 <td>Employee Name</td>
-                                <td><input type="text" name="employee_name" class="form-control"></td>
+                                <td><input type="text" name="employee_name" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="employee_name_remarks" 
                                         value="{{ optional($siteReady)->employee_name_remarks }}" class="form-control">
@@ -426,7 +418,7 @@
                             </tr>
                             <tr>
                                 <td>Designation Code- CSP</td>
-                                <td><input type="text" name="designation_code" class="form-control"></td>
+                                <td><input type="text" name="designation_code" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="designation_code_remarks" 
                                         value="{{ optional($siteReady)->designation_code_remarks }}" class="form-control">
@@ -441,7 +433,7 @@
                             </tr>
                             <tr>
                                 <td>RM Employee ID</td>
-                                <td><input type="text" name="rm_employee_id" class="form-control"></td>
+                                <td><input type="text" name="rm_employee_id" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="rm_employee_id_remarks" 
                                         value="{{ optional($siteReady)->rm_employee_id_remarks }}" class="form-control">
@@ -456,7 +448,7 @@
                             </tr>
                             <tr>
                                 <td>RM Designation Code</td>
-                                <td><input type="text" name="rm_designation_code" class="form-control"></td>
+                                <td><input type="text" name="rm_designation_code" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="rm_designation_code_remarks" 
                                         value="{{ optional($siteReady)->rm_designation_code_remarks }}" class="form-control">
@@ -471,7 +463,7 @@
                             </tr>
                             <tr>
                                 <td>State Code</td>
-                                <td><input type="text" name="state_code" class="form-control"></td>
+                                <td><input type="text" name="state_code" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="state_code_remarks" 
                                         value="{{ optional($siteReady)->state_code_remarks }}" class="form-control">
@@ -486,7 +478,7 @@
                             </tr>
                             <tr>
                                 <td>Distributor Codes</td>
-                                <td><input type="text" name="employee_distributor_codes" class="form-control"></td>
+                                <td><input type="text" name="employee_distributor_codes" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="employee_distributor_codes_remarks" 
                                         value="{{ optional($siteReady)->employee_distributor_codes_remarks }}" class="form-control">
@@ -499,16 +491,10 @@
                                     </div>
                                 </td>
                             </tr>
-
-                            {{-- Employee-Distributor Mapping --}}
-                            <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">Employee-Distributor Mapping</td>
-                            </tr>
                             <tr>
-                                <td rowspan="4" class="align-middle fw-semibold bg-light-subtle">Employee-Distributor Mapping<br>DSR-Distributor Mapping
-                                    <br>Beat-Employee Mapping<br>Supplier- Distributor Mapping<br>Outlet Automated</td>
+                                <td></td>
                                 <td>Employee-Distributor Mapping</td>
-                                <td><input type="text" name="employee_distributor_mapping" class="form-control"></td>
+                                <td><input type="text" name="employee_distributor_mapping" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="employee_distributor_mapping_remarks" 
                                         value="{{ optional($siteReady)->employee_distributor_mapping_remarks }}" class="form-control">
@@ -521,9 +507,12 @@
                                     </div>
                                 </td>
                             </tr>
+
+                            {{-- Employee-Distributor Mapping --}}
                             <tr>
                                 <td>DSR-Distributor Mapping</td>
-                                <td><input type="text" name="dsr_distributor_mapping" class="form-control"></td>
+                                <td></td>
+                                <td><input type="text" name="dsr_distributor_mapping" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="dsr_distributor_mapping_remarks" 
                                         value="{{ optional($siteReady)->dsr_distributor_mapping_remarks }}" class="form-control">
@@ -538,7 +527,8 @@
                             </tr>
                             <tr>
                                 <td>Beat-Employee Mapping</td>
-                                <td><input type="text" name="beat_employee_mapping" class="form-control"></td>
+                                <td></td>
+                                <td><input type="text" name="beat_employee_mapping" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="beat_employee_mapping_remarks" 
                                         value="{{ optional($siteReady)->beat_employee_mapping_remarks }}" class="form-control">
@@ -554,7 +544,8 @@
                         
                             <tr>
                                 <td>Supplier- Distributor Mapping</td>
-                                <td><input type="text" name="supplier_distributor_mapping" class="form-control"></td>
+                                <td></td>
+                                <td><input type="text" name="supplier_distributor_mapping" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="supplier_distributor_mapping_remarks" 
                                         value="{{ optional($siteReady)->supplier_distributor_mapping_remarks }}" class="form-control">
@@ -569,9 +560,11 @@
                             
                             </tr>
                             <tr>
-                                <td></td>
+                                <td 
+                                rowspan="1" class="align-middle fw-semibold bg-light-subtle">Outlet Automated</td>
+                            
                                 <td>Sync in CSP</td>
-                                <td><input type="text" name="outlet_sync_csp" class="form-control"></td>
+                                <td><input type="text" name="outlet_sync_csp" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="outlet_sync_csp_remarks" 
                                         value="{{ optional($siteReady)->outlet_sync_csp_remarks }}" class="form-control">
@@ -586,13 +579,10 @@
                             </tr>
 
                             {{-- Outlet Manual Creation --}}
-                            <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">Outlet Manual Creation</td>
-                            </tr>
                             <tr>
                                 <td rowspan="2" class="align-middle fw-semibold bg-light-subtle">Outlet Manual Creation (optional)</td>
                                 <td>Outlet Lead Creation</td>
-                                <td><input type="text" name="outlet_lead_creation" class="form-control"></td>
+                                <td><input type="text" name="outlet_lead_creation" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="outlet_lead_creation_remarks" 
                                         value="{{ optional($siteReady)->outlet_lead_creation_remarks }}" class="form-control">
@@ -607,7 +597,7 @@
                             </tr>
                             <tr>
                                 <td>Outlet Lead Approval</td>
-                                <td><input type="text" name="outlet_lead_approval" class="form-control"></td>
+                                <td><input type="text" name="outlet_lead_approval" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="outlet_lead_approval_remarks" 
                                         value="{{ optional($siteReady)->outlet_lead_approval_remarks }}" class="form-control">
@@ -622,13 +612,10 @@
                             </tr>
 
                             {{-- Regional Price --}}
-                            <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">Regional Price</td>
-                            </tr>
                             <tr>
                                 <td>Price: Regional/National</td>
                                 <td></td>
-                                <td><input type="text" name="regional_price" class="form-control"></td>
+                                <td><input type="text" name="regional_price" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="regional_price_remarks" 
                                         value="{{ optional($siteReady)->regional_price_remarks }}" class="form-control">
@@ -643,13 +630,10 @@
                             </tr>
 
                             {{-- Opening Stock --}}
-                            <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">Opening Stock</td>
-                            </tr>
                             <tr>
                                 <td>Opening Stock</td>
                                 <td>Has the Distributor been informed to provide the opening stocks before the day</td>
-                                <td><input type="text" name="opening_stock" class="form-control"></td>
+                                <td><input type="text" name="opening_stock" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="opening_stock_remarks" 
                                         value="{{ optional($siteReady)->opening_stock_remarks }}" class="form-control">
@@ -664,13 +648,10 @@
                             </tr>
 
                             {{-- GRN/Invoice --}}
-                            <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">GRN/Invoice</td>
-                            </tr>
                             <tr>
                                 <td>GRN/Invoice</td>
                                 <td>Is GRN Displaying correctly in system?</td>
-                                <td><input type="text" name="grn_invoice" class="form-control"></td>
+                                <td><input type="text" name="grn_invoice" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="grn_invoice_remarks" 
                                         value="{{ optional($siteReady)->grn_invoice_remarks }}" class="form-control">
@@ -685,13 +666,10 @@
                             </tr>
 
                             {{-- Sales Order --}}
-                            <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">Sales Order</td>
-                            </tr>
                             <tr>
                                 <td>Sales Order</td>
                                 <td>Is Sales Order Displaying correctly from</td>
-                                <td><input type="text" name="sales_order" class="form-control"></td>
+                                <td><input type="text" name="sales_order" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="sales_order_remarks" 
                                         value="{{ optional($siteReady)->sales_order_remarks }}" class="form-control">
@@ -706,13 +684,10 @@
                             </tr>
 
                             {{-- Opening Points --}}
-                            <tr class="table-primary">
-                                <td colspan="5" class="fw-semibold text-start">Opening Points</td>
-                            </tr>
                             <tr>
                                 <td>Opening Points</td>
                                 <td>Has the Distributor been informed to provide the opening points balance on the</td>
-                                <td><input type="text" name="opening_points" class="form-control"></td>
+                                <td><input type="text" name="opening_points" class="form-control" readonly></td>
                                 <td>
                                     <input type="text" name="opening_points_remarks" 
                                         value="{{ optional($siteReady)->opening_points_remarks }}" class="form-control">

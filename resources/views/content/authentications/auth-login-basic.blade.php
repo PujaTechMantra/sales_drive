@@ -1,6 +1,6 @@
 @extends('layouts/blankLayout')
 
-@section('title', 'Login Basic - Pages')
+@section('title', 'Login Basic - Page')
 
 @section('page-style')
 @vite([
@@ -23,7 +23,7 @@
             <a href="{{url('/')}}" class="app-brand-link gap-3">
               <!-- <span class="app-brand-logo demo">@include('_partials.macros',["height"=>20,"withbg"=>'fill: #fff;'])</span>
               <span class="app-brand-text demo text-heading fw-semibold">{{config('variables.templateName')}}</span> -->
-              <img class="logo" src="{{asset('assets/img/tm-icon.jpg')}}">
+              <img class="logo" src="{{asset('assets/img/logo.png')}}">
             </a>
           </div>
           <!-- /Logo -->

@@ -1,7 +1,7 @@
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
   <div class="app-brand demo">
-      <img src="{{asset('assets/img/tm-icon.jpg')}}" alt="logo" style="width: 60px; height: 50px; object-fit: cover;">
+      <img src="{{asset('assets/img/logo.png')}}" alt="logo" style="width: 60px; height: 50px; object-fit: cover;">
       <span class="app-brand-text demo menu-text fw-semibold ms-2">Sales Drive</span>
   </div>
 

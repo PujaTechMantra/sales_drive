@@ -134,20 +134,22 @@
                                 <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
                                 <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
                                 <td>
-                                    {{-- <button type="button">Site readiness form</button> --}}
-                                    <a href="{{ route('admin.client.siteReadinessForm', $d->id)}}" target="_blank" 
-                                        class="btn btn-outline-warning btn-sm">Site Readiness Form
-                                    </a>
-                                    <div class="form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
-                                        <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
-                                            {{ $d->site_ready ? 'checked' : '' }}
-                                            onclick="statusSiteReadyToggle('{{route('admin.client.siteReady', $d->id)}}', this)">
-                                        <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
-                                    </div>                            
-                                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
-                                        data-bs-toggle="modal" data-bs-target="#remarksModal" data-id="{{ $d->id }}"
-                                        data-remarks="{{ $d->remarks }}">Remarks
-                                    </button>
+                                    <div class="d-flex flex-wrap align-items-center gap-0">
+                                        {{-- <button type="button">Site readiness form</button> --}}
+                                        <a href="{{ route('admin.client.siteReadinessForm', $d->id)}}" target="_blank" 
+                                            class="btn btn-outline-warning btn-sm">Site Readiness Form
+                                        </a>
+                                        <div class="form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
+                                            <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
+                                                {{ $d->site_ready ? 'checked' : '' }}
+                                                onclick="statusSiteReadyToggle('{{route('admin.client.siteReady', $d->id)}}', this)">
+                                            <label class="form-check-label" for="customSwitch{{$d->id}}"></label>
+                                        </div>                            
+                                        <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm" 
+                                            data-bs-toggle="modal" data-bs-target="#remarksModal" data-id="{{ $d->id }}"
+                                            data-remarks="{{ $d->remarks }}">Remarks
+                                        </button>
+                                    </div>
                                 </td>
                                 <td>
                                     @if($d->site_ready)

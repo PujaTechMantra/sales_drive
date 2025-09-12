@@ -58,14 +58,14 @@ $navbarDetached = ($navbarDetached ?? '');
             @auth('admin')
               <a class="nav-link p-0" href="{{ route('admin.profile')}}">
                 <div class="avatar avatar-online">
-                  <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                  <img src="{{ asset('assets/img/avatars/admin.jpg') }}" alt class="w-px-40 h-auto rounded-circle">
                 </div>
               </a>
             @endauth
             @auth('web')
               <a class="nav-link p-0" href="javascript:void(0)">
                 <div class="avatar avatar-online">
-                  <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                  <img src="{{ asset('assets/img/avatars/admin.jpg') }}" alt class="w-px-40 h-auto rounded-circle">
                 </div>
               </a>
             @endauth
@@ -75,7 +75,7 @@ $navbarDetached = ($navbarDetached ?? '');
                   <div class="d-flex align-items-center">
                     <div class="flex-shrink-0 me-2">
                       <div class="avatar avatar-online">
-                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                        <img src="{{ asset('assets/img/avatars/admin.jpg') }}" alt class="w-px-40 h-auto rounded-circle">
                       </div>
                     </div>
                     <div class="flex-grow-1">
