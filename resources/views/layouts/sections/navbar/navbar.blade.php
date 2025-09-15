@@ -57,7 +57,7 @@ $navbarDetached = ($navbarDetached ?? '');
           <li class="nav-item navbar-dropdown dropdown-user dropdown">
             @auth('admin')
               <a class="nav-link p-0" href="{{ route('admin.profile')}}">
-                <div class="avatar avatar-online">
+                <div class="avatar">
                   <img src="{{ asset('assets/img/avatars/admin.jpg') }}" alt class="w-px-40 h-auto rounded-circle">
                 </div>
               </a>
