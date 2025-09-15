@@ -12,14 +12,17 @@
     </style>
 <div class="container my-5">
     <div class="card shadow-sm border-0 rounded-4">
-        <div class="card-header d-flex justify-content-between align-items-center rounded-top-4 py-2">
-            <h4 class="fw-bold mb-0">
-                Pre-Implementation checklist (Site Readiness) - Preparation for installation by Tech Mantra
-            </h4>
+        <div class="card-header rounded-top-4 py-2">
+            <h4 class="fw-bold mb-1">Distributor name: {{ ucwords($slot->distributor_name)}}</h4>
+            <div class="d-flex justify-content-between align-items-center">
+                <h4 class="fw-bold mb-0">
+                    Pre-Implementation checklist (Site Readiness) - Preparation for installation by Tech Mantra
+                </h4>
 
-            <a href="{{ route('admin.slot-booking.distributorList') }}" class="btn btn-sm btn-danger">
-                <i class="menu-icon tf-icons ri-arrow-left-line"></i> Back
-            </a>
+                <a href="{{ route('admin.slot-booking.distributorList') }}" class="btn btn-sm btn-danger">
+                    <i class="menu-icon tf-icons ri-arrow-left-line"></i> Back
+                </a>
+            </div>
         </div>
         <div class="card-body p-4">
             <form method="POST" action="{{ route('admin.client.storeSiteReadiness')}}">
