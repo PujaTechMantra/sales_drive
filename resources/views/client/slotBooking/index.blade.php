@@ -141,7 +141,7 @@
         <button type="button" id="submitBooking" class="btn btn-primary mt-2">Book Slot</button>
     </form>
 </div> --}}
-<div class="container my-4">
+<div class="container">
     <div class="card shadow-lg border-0 rounded-2">
         <div class="card-header bg-primary text-white rounded-top-4">
             <h4 class="mb-0 text-center">📅 Slot Booking Form</h4>
@@ -265,8 +265,7 @@
 
 @endsection
 @section('scripts')
-{{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> --}}
+
 <link rel="stylesheet" href="{{ asset('build/assets/flatpickr.min.css') }}">
 <script src="{{ asset('build/assets/flatpickr.js')}}"></script>
 <script>

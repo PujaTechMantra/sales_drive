@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Models\{User, SlotBooking, SiteReadinessForm};
+use App\Models\{User, SlotBooking, SiteReadinessForm, RequiredDaySlot};
 
 
 class ClientListController extends Controller
@@ -106,6 +106,66 @@ class ClientListController extends Controller
             'message'   => 'Training status updated successfully'
         ]);
     }
+
+    public function getSlotdate($id){
+        $slots = RequiredDaySlot::where('client_id', $id)->get();
+        $days  = RequiredDaySlot::select('day')->distinct()->pluck('day')->toArray();
+
+        if (empty($days)) {
+            $days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+        }
+
+        return response()->json([
+            'slots' => $slots,
+            'days'  => $days,
+        ]);
+    }
+
+   
+    public function saveSlotdate(Request $request){
+        $client_id = $request->client_id;
+        $days      = $request->day ?? [];
+        $slots     = $request->slot ?? [];
+
+        $errors = [];
+
+        // Validate required
+        foreach($days as $i => $day){
+            if(empty($day)){
+                $errors['day'][$i] = "The day field is required.";
+            }
+            if(!isset($slots[$i]) || $slots[$i] === ''){
+                $errors['slot'][$i] = "Please add slot for {$day}.";
+            }
+        }
+
+        // Validate duplicate days
+        $dayCounts = array_count_values($days);
+        foreach($dayCounts as $day => $count){
+            if($count > 1){
+                $errors['day'][] = "That '$day' is duplicated. please select another day";
+            }
+        }
+
+        if(!empty($errors)){
+            return response()->json(['errors' => $errors], 422);
+        }
+
+        // Delete old slots
+        RequiredDaySlot::where('client_id', $client_id)->delete();
+
+        // Save new slots
+        foreach($days as $i => $day){
+            RequiredDaySlot::create([
+                'client_id' => $client_id,
+                'day'       => $day,
+                'slot'      => $slots[$i],
+            ]);
+        }
+
+        return response()->json(['success' => true, 'message' => 'Slots saved successfully']);
+    }
+
 
     public function distributorList(Request $request) {
     
@@ -369,8 +429,9 @@ class ClientListController extends Controller
 
             return response()->json([
                 'status'    => 200,
-                'message'   => ucfirst(str_replace('_', ' ', $field)) . 
-                                        ($status ? ' enabled successfully' : ' disabled successfully'),
+                // 'message'   => ucfirst(str_replace('_', ' ', $field)) . 
+                //                         ($status ? ' enabled successfully' : ' disabled successfully'),
+                'message'   => 'Update successfully',
         ]);
        } catch(\Exception $e) {
             return response()->json([

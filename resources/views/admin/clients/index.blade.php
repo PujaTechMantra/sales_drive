@@ -71,6 +71,9 @@
                                     </div>
                                 </td>
                                 <td>
+                                    <button class="btn btn-sm btn-info slotBtn" data-id="{{ $item->id}}"
+                                            data-bs-toggle="modal"  data-bs-target="#slotModal">Slot                                                                               
+                                    </button>
                                     <button class="btn btn-sm btn-icon btn-dark editClientBtn" data-id="{{ $item->id }}" data-bs-toggle="tooltip"  title="Edit">
                                         <i class="ri-pencil-line"></i></button>
                                     <a href="javascript:void(0);" class="btn btn-sm btn-icon btn-danger" onclick="deleteClient({{ $item->id }})"     
@@ -177,6 +180,44 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            {{-- add slot --}}
+            <div class="modal fade" id="slotModal" tabindex="-1" aria-labelledby="slotModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Manage Slots</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <form id="slotForm">
+                            @csrf
+                            <input type="hidden" name="client_id" id="client_id">
+                            <div class="modal-body">
+                                <table class="table table-bordered" id="slotTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Day</th>
+                                            <th>Slot</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Rows will be appended dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer d-flex justify-content-between">
+                                <button type="button" class="btn btn-sm btn-success" id="addSlotRow">+ Add More</button>
+
+                                <div>
+                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save Slots</button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -296,5 +337,127 @@
             }
         });
     }
+
+    // add slot date
+    let allDays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+    const slotGetUrl = "{{ route('admin.client.getSlotdate', ':id') }}";
+    const slotSaveUrl = "{{ route('admin.client.saveSlotdate') }}";
+
+    $(document).on("click", ".slotBtn", function () {
+        let clientId = $(this).data("id");
+        $("#client_id").val(clientId);
+        $("#slotTable tbody").empty();
+
+        let url = slotGetUrl.replace(':id', clientId);
+        $.get(url, function (res) {
+            let slots = res.slots;
+
+            if (slots.length > 0) {
+                // Pre-fill existing slots
+                slots.forEach(s => {
+                    addRow(s.day, s.slot);
+                });
+            } else {
+                // No slots yet, start with 1 empty row
+                addRow();
+            }
+        });
+    });
+
+    // Add Row
+    function addRow(day = '', slot = '') {
+        if ($("#slotTable tbody tr").length >= 7) {
+            toastFire("warning", "You can add up to 7 slots only");
+            return;
+        }
+
+        let usedDays = $("#slotTable tbody select").map(function(){ return $(this).val(); }).get();
+        let availableDays = allDays.filter(d => !usedDays.includes(d));
+
+        function ucwords(str) {
+            return str.charAt(0).toUpperCase() + str.slice(1);
+        }
+
+        let options = availableDays.map(d =>
+            `<option value="${d}" ${d === day ? 'selected' : ''}>${ucwords(d)}</option>`
+        ).join('');
+
+        if(day && !options.includes(day)){
+            options += `<option value="${day}" selected>${day}</option>`;
+        }
+
+        let row = `
+        <tr>
+            <td>
+                <select name="day[]" class="form-control">${options}</select>
+                <span class="text-danger error-day"></span>
+            </td>
+            <td>
+                <input type="number" name="slot[]" class="form-control" value="${slot}">
+                <span class="text-danger error-slot"></span>
+            </td>
+            <td><button type="button" class="btn btn-danger btn-sm removeRow">X</button></td>
+        </tr>`;
+        $("#slotTable tbody").append(row);
+    }
+
+    // Remove row
+    $(document).on("click", ".removeRow", function () {
+        $(this).closest("tr").remove();
+    });
+
+    // Add new row
+    $(document).on("click", "#addSlotRow", function () {
+        addRow();
+    });
+
+    // Save slots
+    $("#slotForm").submit(function(e){
+        e.preventDefault();
+        $(".error-day").text("");
+        $(".error-slot").text("");
+
+        let formData = $(this).serialize();
+        $.ajax({
+            url: slotSaveUrl,
+            type: "POST",
+            data: formData,
+            success: function(data){
+                if(data.success){
+                    $("#slotModal").modal("hide");
+                    toastFire("success", "Slots saved successfully");
+                    location.reload();
+                }
+            },
+            error: function(xhr){
+                if(xhr.status === 422){
+                    let errors = xhr.responseJSON.errors;
+
+                    // day errors
+                    if(errors.day){
+                        $("#slotTable tbody tr").each(function(){
+                            let selectedDay = $(this).find("select").val();
+                            if(errors.day.some(e => e.includes(selectedDay))){
+                                $(this).find(".error-day").text(errors.day[0]);
+                            }
+                        });
+                    }
+
+                    // slot required errors
+                    if(errors.slot){
+                        $("#slotTable tbody tr").each(function(i){
+                            if(errors.slot[i]){
+                                $(this).find(".error-slot").text(errors.slot[i]);
+                            }
+                        });
+                    }
+                } else {
+                    toastFire("error", "Something went wrong!");
+                }
+            }
+        });
+    });
+
+
 </script>
 @endsection

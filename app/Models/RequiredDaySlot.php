@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class RequiredDaySlot extends Model
 {
     //
-    protected $fillable = ['day', 'slot'];
+    protected $fillable = ['client_id', 'day', 'slot'];
 }
