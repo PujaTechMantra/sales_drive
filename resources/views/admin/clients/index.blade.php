@@ -202,6 +202,8 @@
                                     <thead>
                                         <tr>
                                             <th>Day</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
                                             <th>Slot</th>
                                             <th>Action</th>
                                         </tr>
@@ -211,8 +213,8 @@
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="modal-footer d-flex justify-content-between">
-                                <button type="button" class="btn btn-sm btn-success" id="addSlotRow">+ Add More</button>
+                            <div class="modal-footer d-flex justify-content-end flex-column align-items-end">
+                                <button type="button" class="btn btn-sm btn-success mb-2" id="addSlotRow">+ Add More</button>
 
                                 <div>
                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
@@ -353,19 +355,18 @@
             let slots = res.slots;
 
             if (slots.length > 0) {
-                // Pre-fill existing slots
-                slots.forEach(s => {
-                    addRow(s.day, s.slot);
+                slots.forEach((s, i) => {
+                    addRow(s.day, s.slot, s.start_time, s.end_time, i === 0); //first row -> no X
                 });
             } else {
-                // No slots yet, start with 1 empty row
-                addRow();
+                // always open with 1 row, no X
+                addRow('', '', '', '', true);
             }
         });
     });
 
     // Add Row
-    function addRow(day = '', slot = '') {
+    function addRow(day = '', slot = '', start_time = '', end_time = '', isFirst = false) {
         if ($("#slotTable tbody tr").length >= 7) {
             toastFire("warning", "You can add up to 7 slots only");
             return;
@@ -378,12 +379,18 @@
             return str.charAt(0).toUpperCase() + str.slice(1);
         }
 
-        let options = availableDays.map(d =>
+        let options =  `<option value="">Please select day</option>`;
+        // options += availableDays.map(d =>
+        //     `<option value="${d}" ${d === day ? 'selected' : ''}>${ucwords(d)}</option>`
+        // ).join('');
+
+        options += allDays.map(d =>
             `<option value="${d}" ${d === day ? 'selected' : ''}>${ucwords(d)}</option>`
         ).join('');
 
-        if(day && !options.includes(day)){
-            options += `<option value="${day}" selected>${day}</option>`;
+        // If day already saved in DB but not in availableDays, add it back
+        if(day && !options.includes(`value="${day}"`)){
+            options += `<option value="${day}" selected>${ucwords(day)}</option>`;
         }
 
         let row = `
@@ -393,10 +400,20 @@
                 <span class="text-danger error-day"></span>
             </td>
             <td>
+                <input type="time" name="start_time[]" class="form-control" value="${start_time}">
+                <span class="text-danger error-start_time"></span>
+            </td>
+            <td>
+                <input type="time" name="end_time[]" class="form-control" value="${end_time}">
+                <span class="text-danger error-end_time"></span>    
+            </td>
+            <td>
                 <input type="number" name="slot[]" class="form-control" value="${slot}">
                 <span class="text-danger error-slot"></span>
             </td>
-            <td><button type="button" class="btn btn-danger btn-sm removeRow">X</button></td>
+            <td>
+                ${isFirst ? '' : '<button type="button" class="btn btn-danger btn-sm removeRow">X</button>'}
+            </td>
         </tr>`;
         $("#slotTable tbody").append(row);
     }
@@ -429,21 +446,47 @@
                     location.reload();
                 }
             },
+            // error: function(xhr){
+            //     if(xhr.status === 422){
+            //         let errors = xhr.responseJSON.errors;
+
+            //         // day errors
+            //         if(errors.day){
+            //             $("#slotTable tbody tr").each(function(){
+            //                 let selectedDay = $(this).find("select").val();
+            //                 if(errors.day.some(e => e.includes(selectedDay))){
+            //                     $(this).find(".error-day").text(errors.day[0]);
+            //                 }
+            //             });
+            //         }
+
+            //         // slot required errors
+            //         if(errors.slot){
+            //             $("#slotTable tbody tr").each(function(i){
+            //                 if(errors.slot[i]){
+            //                     $(this).find(".error-slot").text(errors.slot[i]);
+            //                 }
+            //             });
+            //         }
+            //     } else {
+            //         toastFire("error", "Something went wrong!");
+            //     }
+            // }
+
             error: function(xhr){
                 if(xhr.status === 422){
                     let errors = xhr.responseJSON.errors;
 
                     // day errors
                     if(errors.day){
-                        $("#slotTable tbody tr").each(function(){
-                            let selectedDay = $(this).find("select").val();
-                            if(errors.day.some(e => e.includes(selectedDay))){
-                                $(this).find(".error-day").text(errors.day[0]);
+                        $("#slotTable tbody tr").each(function(i){
+                            if(errors.day[i]){
+                                $(this).find(".error-day").text(errors.day[i]);
                             }
                         });
                     }
 
-                    // slot required errors
+                    // slot errors
                     if(errors.slot){
                         $("#slotTable tbody tr").each(function(i){
                             if(errors.slot[i]){
@@ -451,10 +494,40 @@
                             }
                         });
                     }
+
+                    // start_time errors
+                    if(errors.start_time){
+                        $("#slotTable tbody tr").each(function(i){
+                            if(errors.start_time[i]){
+                                $(this).find(".error-start_time").text(errors.start_time[i]);
+                            }
+                        });
+                    }
+
+                    // end_time errors
+                    if(errors.end_time){
+                        $("#slotTable tbody tr").each(function(i){
+                            if(errors.end_time[i]){
+                                $(this).find(".error-end_time").text(errors.end_time[i]);
+                            }
+                        });
+                    }
+
+                    // time overlap errors (we put them in "time" key in controller)
+                    if(errors.time){
+                        $("#slotTable tbody tr").each(function(i){
+                            if(errors.time[i]){
+                                $(this).find(".error-start_time").text(errors.time[i]);
+                                $(this).find(".error-end_time").text(errors.time[i]);
+                            }
+                        });
+                    }
+
                 } else {
                     toastFire("error", "Something went wrong!");
                 }
             }
+
         });
     });
 

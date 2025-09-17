@@ -123,9 +123,12 @@ class ClientListController extends Controller
 
    
     public function saveSlotdate(Request $request){
-        $client_id = $request->client_id;
-        $days      = $request->day ?? [];
-        $slots     = $request->slot ?? [];
+        //dd($request->all());
+        $client_id      = $request->client_id;
+        $days           = $request->day ?? [];
+        $slots          = $request->slot ?? [];
+        $start_times    = $request->start_time ?? [];
+        $end_times      = $request->end_time ?? [];
 
         $errors = [];
 
@@ -137,15 +140,49 @@ class ClientListController extends Controller
             if(!isset($slots[$i]) || $slots[$i] === ''){
                 $errors['slot'][$i] = "Please add slot for {$day}.";
             }
+            if (empty($start_times[$i])) {
+                $errors['start_time'][$i] = "Please add start time for {$day}.";
+            }
+            if (empty($end_times[$i])) {
+                $errors['end_time'][$i] = "Please add end time for {$day}.";
+            }
         }
 
         // Validate duplicate days
-        $dayCounts = array_count_values($days);
-        foreach($dayCounts as $day => $count){
-            if($count > 1){
-                $errors['day'][] = "That '$day' is duplicated. please select another day";
+        // $dayCounts = array_count_values($days);
+        // foreach($dayCounts as $day => $count){
+        //     if($count > 1){
+        //         $errors['day'][] = "That '$day' is duplicated. please select another day";
+        //     }
+        // }
+
+        //check overlapping slots within the same day
+        $dayWiseSlots = [];
+        foreach($days as $i => $day){
+            if(!isset($dayWiseSlots[$day])) {
+                $dayWiseSlots[$day] = [];
+            }
+            $dayWiseSlots[$day][] = [
+                'start' => $start_times[$i],
+                'end'   => $end_times[$i],
+                'index' => $i
+            ];
+        }
+
+        foreach ($dayWiseSlots as $day => $slotsForDay) {
+            usort($slotsForDay, fn($a, $b) => strcmp($a['start'], $b['start']));
+
+            for ($j = 0; $j< count($slotsForDay) - 1; $j++) {
+                $current = $slotsForDay[$j];
+                $next    = $slotsForDay[$j + 1];
+
+                if ($current['end'] > $next['start']) {
+                    $errors['time'][$current['index']] = "This time slot is already booked for {$day}, please choose another slot.";
+                    $errors['time'][$next['index']] = "This time slot is already booked for {$day}, please choose another slot.";
+                }
             }
         }
+
 
         if(!empty($errors)){
             return response()->json(['errors' => $errors], 422);
@@ -157,9 +194,11 @@ class ClientListController extends Controller
         // Save new slots
         foreach($days as $i => $day){
             RequiredDaySlot::create([
-                'client_id' => $client_id,
-                'day'       => $day,
-                'slot'      => $slots[$i],
+                'client_id'     => $client_id,
+                'day'           => $day,
+                'slot'          => $slots[$i],
+                'start_time'    => $start_times[$i],
+                'end_time'      => $end_times[$i],
             ]);
         }
 
