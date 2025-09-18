@@ -12,27 +12,40 @@ class SlotBookingController extends Controller
 {
     //
     public function index() {
-        $client             = Auth::guard('client')->user();
-        $required_day_slots = RequiredDaySlot::select('day', 'slot')->get();
-        // $available_day      = $required_day_slots->pluck('day')->toArray();
-        $available_day      = RequiredDaySlot::where('client_id', Auth::guard('client')->id())->pluck('day')->toArray();
+        $client    = Auth::guard('client')->user();
+        // $required_day_slots = RequiredDaySlot::select('day', 'slot')->get();
+        // $required_day_slots = RequiredDaySlot::where('client_id', $client->id)
+        //                                         ->select('day', 'slot', 'start_time', 'end_time')->get();
+
+        $required_day_slots = RequiredDaySlot::where('client_id', $client->id)
+                                                ->get(['id','day','slot','start_time','end_time'])
+                                                ->map(function ($slot) {
+                                                    $slot->start_time_formatted =  date('h:i A', strtotime($slot->start_time));
+                                                    $slot->end_time_formatted   =  date('h:i A', strtotime($slot->end_time));
+                                                    return $slot;
+                                                });
+
+        $available_day      = $required_day_slots->pluck('day')->toArray();
+
+        $slotsByDay = $required_day_slots->groupBy('day');
                                 
-        return view('client.slotBooking.index', compact('client','available_day'));
+        return view('client.slotBooking.form', compact('client','available_day', 'required_day_slots', 'slotsByDay'));
     }
 
-    public function checkSlot(Request $request)
-    {
+    public function checkSlot(Request $request){
         $slotDate   = Carbon::parse($request->slot_date);
+
+        $slotId = $request->slot_id;
 
         // Current logged in client
         $clientId = Auth::guard('client')->id();
 
         // Fetch allowed days and slots
         // $rules      = RequiredDaySlot::all();
-        $rules      = RequiredDaySlot::where('client_id', $clientId)->get();
-        $dayName    = strtolower($slotDate->format('l'));
+        $rule      = RequiredDaySlot::where('client_id', $clientId)->where('id', $slotId)->first();
+        // $dayName    = strtolower($slotDate->format('l'));
 
-        $rule = $rules->firstWhere('day', $dayName);
+        // $rule = $rules->firstWhere('day', $dayName);
 
         if (!$rule) {
             return response()->json([
@@ -50,10 +63,10 @@ class SlotBookingController extends Controller
         }
 
         // Check slot availability
-        $count = SlotBooking::whereDate('slot_date', $slotDate)->count();
-        // $count = SlotBooking::where('client_id', Auth::guard('client')->id())
-        //                         ->whereDate('slot_date', $slotDate)
-        //                         ->count();
+        $count = SlotBooking::whereDate('slot_date', $slotDate)
+                                ->where('slot_start_time', $rule->start_time)
+                                ->where('slot_end_time', $rule->end_time)
+                                ->count();
 
         if ($count >= $rule->slot) {
             return response()->json([
@@ -70,8 +83,7 @@ class SlotBookingController extends Controller
         ]);
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $request->validate([
             'distributor_name.*'            => 'required|string|max:155',
             'distributor_address.*'         => 'required|string|max:255',
@@ -88,20 +100,8 @@ class SlotBookingController extends Controller
             'so_name.*'                     => 'nullable|string|max:155',
             'so_contact_no.*'               => 'nullable|digits:10',
             'slot_date'                     => 'required|date',
-            // 'slot_start_time'               => 'nullable|date_format:H:i',
-            'slot_start_time'               => [
-                'required', 'date_format:H:i',
-                function($attribute, $value, $fail) use ($request) {
-                    $allowed = [
-                        '11:00' => '13:00',
-                        '15:00' => '17:00',
-                    ];
-                    if(!isset($allowed[$value]) || $request->slot_end_time != $allowed[$value]){
-                        $fail("Only slots 11:00-13:00 or 15:00-17:00 are allowed.");
-                    }
-                }
-            ],
-            'slot_end_time'               => 'required|date_format:H:i|after:slot_strat_time',                 
+            'slot_start_time' => 'required|date_format:H:i:s',
+            'slot_end_time'   => 'required|date_format:H:i:s|after:slot_start_time',               
         ],
        
         [
@@ -159,12 +159,9 @@ class SlotBookingController extends Controller
             'slot_date.date'     => 'Slot date must be a valid date.',
 
             // Slot Time
-            'slot_start_time.required'      => 'Slot start time is required.',
-            'slot_start_time.date_format'   => 'Slot start time must be in 24-hour format (HH:MM).',
+            'slot_start_time.required'  => 'Slot start time is required.',
 
             'slot_end_time.required'    => 'Slot end time is required.',
-            'slot_end_time.date_format' => 'Slot end time must be in 24-hour format (HH:MM).',
-            'slot_end_time.after'       => 'Slot end time must be greater than slot start time.',
         ]);
         $slotDate = Carbon::parse($request->slot_date);
 
@@ -174,11 +171,11 @@ class SlotBookingController extends Controller
         // $count = SlotBooking::whereDate('slot_date', $slotDate)->count();
         //$rule = RequiredDaySlot::where('day', strtolower($slotDate->format('l')))->first();
         $count = SlotBooking::where('client_id', $clientId)
-                    ->whereDate('slot_date', $slotDate)
-                    ->count();
+                                ->whereDate('slot_date', $slotDate)
+                                ->count();
         $rule = RequiredDaySlot::where('client_id', $clientId)
-                        ->where('day', strtolower($slotDate->format('l')))
-                        ->first();
+                                    ->where('day', strtolower($slotDate->format('l')))
+                                    ->first();
 
         if (!$rule) {
             return response()->json(['status' => false, 'message' => 'Invalid day']);
@@ -206,8 +203,8 @@ class SlotBookingController extends Controller
                 'so_name'               => $request->so_name[$index],
                 'so_contact_no'         => $request->so_contact_no[$index],
                 'slot_date'             => $slotDate,
-                'slot_start_time'       => $request->slot_start_time ?? null,
-                'slot_end_time'         => $request->slot_end_time ?? null,
+                'slot_start_time'       => $request->slot_start_time,
+                'slot_end_time'         => $request->slot_end_time,
             ]);
         }
 

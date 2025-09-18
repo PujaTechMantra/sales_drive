@@ -191,7 +191,7 @@
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">Manage Slots</h5>
+                            <h5 class="modal-title">Manage Slots for {{ ucwords($item->name) }}</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                         </div>
                         <form id="slotForm">
