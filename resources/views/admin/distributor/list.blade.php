@@ -65,15 +65,6 @@
                             </select>
 
                             {{-- search by date --}}
-                            {{-- <select name="slot_date" id="slot_date" class="form-control form-control-sm select2 me-2" style="min-width: 200px;">
-                                <option value="">-- All Dates --</option>
-                                @foreach($slotDates as $date)
-                                    <option value="{{ $date }}" {{ request('slot_date') == $date ? 'selected' : '' }}>
-                                        {{ date('d-m-Y', strtotime($date)) }}
-                                    </option>
-                                @endforeach
-                            </select> --}}
-                            {{-- <label for="slot_date" class="form-label">Select Slot Date</label> --}}
                             <input type="text" class="form-control" name="slot_date" id="slot_date"
                                 placeholder="Select slot date" autocomplete="off" style="height: 30px" 
                                 value="{{ request('slot_date')}}">
@@ -105,7 +96,7 @@
                             <th>Slot Time</th>
                             <th>Site Ready</th>
                             <th>Training Status</th>
-                            <th>Training complete status</th>
+                            <th>Complete status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -162,19 +153,44 @@
                                         
                                         <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
                                             data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" training-data-id="{{ $d->id }}"
-                                            data-training-remarks="{{ $d->training_remarks }}">Training Remarks
+                                            data-training-remarks="{{ $d->training_remarks }}">Remarks
                                         </button>
                                     @else
                                         {{-- keep blank --}}
                                     @endif
                                 </td>
-                                <td>
+                                
+                               <td>
                                     @if($d->site_ready == 1 && $d->training_done == 1)
+                                        {{-- Both complete → show SUCCESS --}}
                                         <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
+
+                                    @elseif($d->complete_status == 'rescheduled')
+                                        {{-- After client reschedules → show RESCHEDULED --}}
+                                        <span class="badge bg-info rounded-pill px-3 py-2">RESCHEDULED</span>
+
+                                    @elseif($d->site_ready == 0 && $d->training_done == 0)
+                                        {{-- Both are 0 → show dropdown --}}
+                                        <div>
+                                            <select class="form-select form-select-sm w-auto status-dropdown" data-id="{{ $d->id }}">                        
+                                                <option value="pending" {{ $d->complete_status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                                <option value="waiting for reschedule" {{ $d->complete_status == 'waiting for reschedule' ? 'selected' : '' }}>Waiting for Reschedule</option>
+                                            </select>
+
+                                            <div class="mt-2 status-badge">
+                                                @if($d->complete_status == 'waiting for reschedule')
+                                                    <span class="badge bg-danger rounded-pill px-3 py-2">WAITING FOR RESCHEDULE</span>
+                                                @else
+                                                    <span class="badge bg-warning rounded-pill px-3 py-2">PENDING</span>
+                                                @endif
+                                            </div>
+                                        </div>
+
                                     @else
-                                        <span class="badge bg-danger rounded-pill px-3 py-2">FAILED</span>
+                                        {{-- One is 1 and other is 0 → nothing shown --}}
                                     @endif
                                 </td>
+
                             </tr>
                         @empty
                             <tr>
@@ -292,5 +308,38 @@
             document.getElementById('training_remarks_text').value = trainingRemarks ? trainingRemarks : '';
         });
     });
+
+    //complete status   
+    $jq(document).on("change", ".status-dropdown", function () {
+        let status = $(this).val();
+        let id = $(this).data("id");
+        let badgeDiv = $(this).closest("td").find(".status-badge");
+
+        // Update badge instantly
+        if (status === "pending") {
+            badgeDiv.html('<span class="badge bg-warning rounded-pill px-3 py-2">PENDING</span>');
+        } else if (status === "waiting for reschedule") {
+            badgeDiv.html('<span class="badge bg-danger rounded-pill px-3 py-2">WAITING FOR RESCHEDULE</span>');
+        }
+
+        // Save to DB using route()
+        $.ajax({
+            url: "{{ route('admin.client.completeStatus', ':id') }}".replace(':id', id),
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                status: status
+            },
+            success: function (data){
+                if (data.status != 200) {
+                    toastFire('error', data.message);
+                } else {
+                    toastFire('success', data.message);
+                    location.reload();
+                }
+            }
+        });
+    });
+
 </script>
 @endsection

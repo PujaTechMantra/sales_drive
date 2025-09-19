@@ -76,7 +76,7 @@
                             <th>Slot Time</th>
                             <th>Site Ready</th>
                             <th>Training Status</th>
-                            <th>Training complete status</th>
+                            <th>Complete status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,7 +134,7 @@
                                             
                                             <button type="button" class="btn btn-outline-primary btn-sm rounded-pill d-flex align-items-center gap-1 shadow-sm px-5" 
                                                 data-bs-toggle="modal" data-bs-target="#remarksTrainingModal" data-id="{{ $d->id }}"
-                                                data-remarks="{{ $d->training_remarks }}">Training Remarks
+                                                data-remarks="{{ $d->training_remarks }}">Remarks
                                             </button>
                                         @else
                                             <h8>Waiting for site ready...</h8>                                        
@@ -142,10 +142,22 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($d->site_ready == 1 && $d->training_done == 1)
+                                    @if($d->complete_status == 'success')
+                                  
                                         <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
-                                    @else
-                                        <span class="badge bg-danger rounded-pill px-3 py-2">FAILED</span>
+
+                                    @elseif($d->complete_status == 'pending')
+                                        <span class="badge bg-warning rounded-pill px-3 py-2">PENDING</span>
+
+                                    @elseif($d->complete_status == 'waiting for reschedule')
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">WAITING FOR RESCHEDULE</span>
+                                        <a href="{{ route('client.slot.rescheduleForm', $d->id) }}"
+                                            class="btn btn-outline-primary btn-sm rounded-pill shadow-sm px-4 mt-1 rescheduleBtn">
+                                            Reschedule
+                                        </a>
+                                    @elseif($d->complete_status == 'rescheduled')
+                                        <span class="badge bg-info rounded-pill px-3 py-2">RESCHEDULED</span>
+
                                     @endif
                                 </td>
                             </tr>

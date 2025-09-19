@@ -231,7 +231,46 @@ class SlotBookingController extends Controller
         }
 
         $distributor = $query->orderBy('id', 'desc')->paginate(20);
-        return view('client.slotBooking.list', compact('distributor', 'slotDates', 'availableDates'));
+        return view('client.distributor.list', compact('distributor', 'slotDates', 'availableDates'));
+    }
+
+    public function rescheduleForm($id) {
+        $booking = SlotBooking::findOrFail($id);
+
+        $required_day_slots = RequiredDaySlot::where('client_id', $booking->client_id)
+                            ->get(['id','day','slot','start_time','end_time'])
+                            ->map(function ($slot) {
+                                $slot->start_time_formatted = date('h:i A', strtotime($slot->start_time));
+                                $slot->end_time_formatted   = date('h:i A', strtotime($slot->end_time));
+                                return $slot;
+                            });
+
+        $available_day = $required_day_slots->pluck('day')->toArray();
+        $slotsByDay = $required_day_slots->groupBy('day');
+
+        return view('client.distributor.slot-reschedule', compact('booking','available_day','slotsByDay'));
+    }
+
+
+    public function saveReschedule(Request $request) {
+        $request->validate([
+            'booking_id' => 'required|exists:slot_bookings,id',
+            'slot_date'  => 'required|date',
+            'slot_id' => 'required|exists:required_day_slots,id',
+        ]);
+
+        $booking = SlotBooking::findOrFail($request->booking_id);
+        $slot = RequiredDaySlot::findOrFail($request->slot_id);
+
+        $booking->slot_date = $request->slot_date;
+        // $booking->slot_id = $slot->id;
+        $booking->slot_start_time = $slot->start_time;
+        $booking->slot_end_time = $slot->end_time;
+
+        $booking->complete_status = 'rescheduled';
+        $booking->save();
+
+        return redirect()->route('client.slot-booking.distributorList')->with('success', 'Slot rescheduled successfully');
     }
 
    

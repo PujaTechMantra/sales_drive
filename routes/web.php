@@ -94,6 +94,9 @@ Route::prefix('admin')->group(function () {
             Route::get('/site-ready/{id}', [ClientListController::class, 'siteReady'])->name('admin.client.siteReady');
             Route::post('/save-remarks-site-ready', [ClientListController::class, 'savesiteReadyRemarks'])->name('admin.client.savesiteReadyRemarks');
 
+            //complete status
+            Route::post('complete-status/{id}', [ClientListController::class, 'completeStatus'])->name('admin.client.completeStatus');
+
             //master module/distributor, training, remarks
             Route::get('training-done/{id}', [ClientListController::class, 'trainingDone'])->name('admin.client.trainingDone');
             Route::post('/save-remarks-training', [ClientListController::class, 'savetrainingRemarks'])->name('admin.client.savetrainingRemarks');
@@ -127,6 +130,9 @@ Route::middleware(['client', 'prevent-back-history'])->prefix('user')->group(fun
         Route::post('/form/store', [SlotBookingController::class, 'store'])->name('client.slot-booking.store');
         Route::get('/form/available-date', [SlotBookingController::class, 'getAvailableDates'])->name('client.slot-booking.getAvailableDates');
         Route::get('/distributor-list', [SlotBookingController::class, 'distributorList'])->name('client.slot-booking.distributorList');
+
+        Route::get('/distributor-list/slot-reschedule/{id}', [SlotBookingController::class, 'rescheduleForm'])->name('client.slot.rescheduleForm');
+        Route::post('/distributor-list/slot-reschedule', [SlotBookingController::class, 'saveReschedule'])->name('client.slot.saveReschedule');
 
         Route::get('training-done/{id}', [TrainingController::class, 'trainingDone'])->name('client.trainingDone');
         Route::post('/save-remarks-training', [TrainingController::class, 'savetrainingRemarks'])->name('client.savetrainingRemarks');

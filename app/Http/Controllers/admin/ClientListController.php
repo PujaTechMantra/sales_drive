@@ -262,6 +262,41 @@ class ClientListController extends Controller
         return redirect()->route('admin.slot-booking.distributorList')->with('success', 'Site ready Remarks added successfully');
     }
 
+    // public function completeStatus(Request $request, $id) {
+    //     $booking = SlotBooking::findOrFail($id);
+    //     $booking->complete_status = $request->status;
+        
+    //     if ($booking->site_ready == 1 && $booking->training_done == 1) {
+    //         $booking->complete_status = 'success';
+    //     }
+    //     $booking->save();
+
+    //     return response()->json([
+    //         'status'    => 200,
+    //         'message'   => 'Status changed'
+    //     ]);
+    // }
+    public function completeStatus(Request $request, $id)
+    {
+        $booking = SlotBooking::findOrFail($id);
+
+        // If both site_ready and training_done are done → force success
+        if ($booking->site_ready == 1 && $booking->training_done == 1) {
+            $booking->complete_status = 'success';
+        } else {
+            // Otherwise, use requested status
+            $booking->complete_status = $request->status;
+        }
+
+        $booking->save();
+
+        return response()->json([
+            'status'  => 200,
+            'message' => 'Status changed'
+        ]);
+    }
+
+
     public function trainingDone($id) {
         $training = SlotBooking::findOrFail($id);
         $training->training_done = $training->training_done ? 0 : 1;
@@ -284,8 +319,73 @@ class ClientListController extends Controller
             return redirect()->route('admin.slot-booking.distributorList')->with('success', 'Training remarks added successfully');    
     }
 
-    public function exportDistList(Request $request) {
+    // public function exportDistList(Request $request) {
 
+    //     $query = SlotBooking::with('user');
+
+    //     // Filter by slot_date
+    //     if ($request->filled('slot_date')) {
+    //         $query->whereDate('slot_date', $request->slot_date);
+    //     }
+
+    //     // Filter by client_id
+    //     if ($request->filled('client_id')) {
+    //         $query->whereIn('client_id', $request->client_id);
+    //     }
+       
+    //     // Filter by keyword 
+    //     if($request->filled('keyword')) {
+    //         $keyword = $request->keyword;
+    //         $query->where(function($q) use ($keyword) {
+    //             $q->whereHas('user', function($sub) use ($keyword) {
+    //                 $sub->where('name', 'like', "%{$keyword}%");
+    //             })->orWhere('distributor_name', 'like', "%{$keyword}%")
+    //                 ->orWhere('distributor_address', 'like', "%{$keyword}%")
+    //                 ->orWhere('distributor_contact_no', 'like', "%{$keyword}%")
+    //                 ->orWhere('distributor_email', 'like', "%{$keyword}%");
+    //         });
+    //     }
+
+    //     $distributors = $query->orderBy('id', 'desc')->get();
+
+    //     if ($distributors->count() > 0) {
+    //         $delimiter = ",";
+    //         $filename = "distributor_export_" . date('Y-m-d') . ".csv";
+
+    //         $f = fopen('php://memory', 'w');
+
+    //         // CSV column headers
+    //         $headers = ['Client Name', 'Distributor Name', 'Distributor Address', 'Contact Number', 
+    //         'Email', 'Slot Date', 'Training complete status'];
+    //         fputcsv($f, $headers, $delimiter);
+
+    //         foreach ($distributors as $distributor) {
+    //             $status = ($distributor->site_ready == 1 && $distributor->training_done == 1) ? 'SUCCESS' : 'FAILED';
+    //             $lineData = [
+    //                 $distributor->user ? $distributor->user->name : 'N/A',
+    //                 $distributor->distributor_name,
+    //                 $distributor->distributor_address,
+    //                 $distributor->distributor_contact_no,
+    //                 $distributor->distributor_email,
+    //                 Carbon::parse($distributor->slot_date)->format('d-m-Y'),
+    //                 $status,
+    //             ];
+    //             fputcsv($f, $lineData, $delimiter);
+    //         }
+
+    //         // Rewind and output
+    //         fseek($f, 0);
+    //         header('Content-Type: text/csv');
+    //         header('Content-Disposition: attachment; filename="' . $filename . '";');
+    //         fpassthru($f);
+    //         exit;
+    //     } else {
+    //         return redirect()->back()->with('error', 'No records found to export.');
+    //     }
+    // }
+
+    public function exportDistList(Request $request)
+    {
         $query = SlotBooking::with('user');
 
         // Filter by slot_date
@@ -297,17 +397,17 @@ class ClientListController extends Controller
         if ($request->filled('client_id')) {
             $query->whereIn('client_id', $request->client_id);
         }
-       
+
         // Filter by keyword 
-        if($request->filled('keyword')) {
+        if ($request->filled('keyword')) {
             $keyword = $request->keyword;
-            $query->where(function($q) use ($keyword) {
-                $q->whereHas('user', function($sub) use ($keyword) {
+            $query->where(function ($q) use ($keyword) {
+                $q->whereHas('user', function ($sub) use ($keyword) {
                     $sub->where('name', 'like', "%{$keyword}%");
                 })->orWhere('distributor_name', 'like', "%{$keyword}%")
-                    ->orWhere('distributor_address', 'like', "%{$keyword}%")
-                    ->orWhere('distributor_contact_no', 'like', "%{$keyword}%")
-                    ->orWhere('distributor_email', 'like', "%{$keyword}%");
+                ->orWhere('distributor_address', 'like', "%{$keyword}%")
+                ->orWhere('distributor_contact_no', 'like', "%{$keyword}%")
+                ->orWhere('distributor_email', 'like', "%{$keyword}%");
             });
         }
 
@@ -319,21 +419,55 @@ class ClientListController extends Controller
 
             $f = fopen('php://memory', 'w');
 
-            // CSV column headers
-            $headers = ['Client Name', 'Distributor Name', 'Distributor Address', 'Contact Number', 
-            'Email', 'Slot Date', 'Training complete status'];
+            // CSV column headers (all fields from distributor_name → slot_end_time + complete_status)
+            $headers = [
+                'Client Name',
+                'Distributor Name',
+                'Distributor Code',
+                'Distributor Address',
+                'Contact Number',
+                'Email',
+                'City',
+                'State',
+                'Zone',
+                'GST Number',
+                'PAN Number',
+                'Distributor Contact Person',
+                'Distributor Contact Person Phone',
+                'SO Name',
+                'SO Contact',
+                'Remarks',
+                'Training Remarks',
+                'Slot Date',
+                'Slot Start Time',
+                'Slot End Time',
+                'Complete Status'
+            ];
             fputcsv($f, $headers, $delimiter);
 
             foreach ($distributors as $distributor) {
-                $status = ($distributor->site_ready == 1 && $distributor->training_done == 1) ? 'SUCCESS' : 'FAILED';
                 $lineData = [
                     $distributor->user ? $distributor->user->name : 'N/A',
                     $distributor->distributor_name,
+                    $distributor->distributor_code,
                     $distributor->distributor_address,
                     $distributor->distributor_contact_no,
                     $distributor->distributor_email,
+                    $distributor->city,
+                    $distributor->state,
+                    $distributor->zone,
+                    $distributor->gst_number,
+                    $distributor->pan_number,
+                    $distributor->distributor_contact_person,
+                    $distributor->distributor_contact_person_phone,
+                    $distributor->so_name,
+                    $distributor->so_contact_no,
+                    $distributor->remarks,
+                    $distributor->training_remarks,
                     Carbon::parse($distributor->slot_date)->format('d-m-Y'),
-                    $status,
+                    Carbon::parse($distributor->slot_start_time)->format('h:i A'),
+                    Carbon::parse($distributor->slot_end_time)->format('h:i A'),
+                    strtoupper($distributor->complete_status), // use DB value instead of calculated
                 ];
                 fputcsv($f, $lineData, $delimiter);
             }
@@ -348,6 +482,7 @@ class ClientListController extends Controller
             return redirect()->back()->with('error', 'No records found to export.');
         }
     }
+
 
     public function siteReadinessForm($id) {
         $slot = SlotBooking::with('siteReadinessForm')->findOrFail($id);
