@@ -95,9 +95,9 @@
                                         <li>Email: {{ $d->distributor_email }}</li>
                                         <li>PAN:{{ $d->pan_number}}</li>
                                         <li>GST:{{ $d->gst_number }}</li>
-                                        <li>Distributor Contact person:{{ $d->distributor_contact_person ? $d->distributor_contact_person : 'NA'}}</li>
+                                        <li>Distributor Contact person:{{ ucwords($d->distributor_contact_person ? $d->distributor_contact_person : 'NA')}}</li>
                                         <li>Distributor Contact person Phone:{{ $d->distributor_contact_person_phone ? $d->distributor_contact_person_phone : 'NA' }}</li>
-                                        <li>SO Name:{{ $d->so_name ? $d->so_name : 'NA' }}</li>
+                                        <li>SO Name:{{ ucwords($d->so_name ? $d->so_name : 'NA') }}</li>
                                         <li>SO Contact:{{ $d->so_contact_no ? $d->so_contact_no : 'NA'}}</li>
                                     </ul>
                                 </td>
@@ -105,16 +105,18 @@
                                 <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
 
                                 <td>
-                                    @if($d->site_ready == 1)
-                                        <span class="badge bg-success rounded-pill px-3 py-2">YES</span>
-                                    @else
-                                        <span class="badge bg-danger rounded-pill px-3 py-2">NO</span>
-                                    @endif
+                                    <div class="d-flex align-items-center gap-2">
+                                        @if($d->site_ready == 1)
+                                            <span class="badge bg-success rounded-pill px-3 py-2">COMPLETE</span>
+                                        @else
+                                            <span class="badge bg-danger rounded-pill px-3 py-2">PENDING</span>
+                                        @endif
 
-                                    <button type="button" class="btn btn-sm btn-outline-primary rounded-circle viewRemarksBtn"
-                                        data-bs-toggle="modal" data-bs-target="#remarksModal"
-                                        data-remarks="{{ $d->remarks}}" title="Remarks"><i class="ri-eye-line ri-15px"></i>
-                                    </button>
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-circle viewRemarksBtn"
+                                            data-bs-toggle="modal" data-bs-target="#remarksModal"
+                                            data-remarks="{{ $d->remarks}}" title="Remarks"><i class="ri-eye-line ri-15px"></i>
+                                        </button>
+                                    </div>
                                 </td>
                                 <td>
                                     @if($d->user && $d->user->training_status == 0)
@@ -142,12 +144,12 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if($d->complete_status == 'success')
+                                    @if($d->site_ready == 1 && $d->training_done == 1)
                                   
                                         <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
 
                                     @elseif($d->complete_status == 'pending')
-                                        <span class="badge bg-warning rounded-pill px-3 py-2">PENDING</span>
+                                        <span class="badge bg-warning rounded-pill px-3 py-2">Wait for status</span>
 
                                     @elseif($d->complete_status == 'waiting for reschedule')
                                         <span class="badge bg-danger rounded-pill px-3 py-2">WAITING FOR RESCHEDULE</span>

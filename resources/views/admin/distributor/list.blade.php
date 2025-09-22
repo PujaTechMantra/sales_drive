@@ -46,14 +46,14 @@
             <form method="GET" action="{{ route('admin.slot-booking.distributorList') }}">
                 <div class="row mb-3">
                     
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div class="col-md-6"></div>
+                    <div class="form-group d-flex justify-content-between align-items-center mb-0">
+                        {{-- <div class="col-md-6"></div> --}}
+                        <div style="width:200px;">
+                            <input type="search" class="form-control form-control-sm" name="keyword" id="keyword" 
+                                value="{{ request()->input('keyword') }}" placeholder="Search" style=" width:200px; height: 5px">
+                        </div>
                         {{-- Left side (Slot Date Filter) --}}
-                        <div class="form-group d-flex align-items-center mb-0">
-                            <div class="form-group me-1 mb-0">
-                                <input type="search" class="form-control form-control-sm" name="keyword" id="keyword" 
-                                    value="{{ request()->input('keyword') }}" placeholder="Search" style=" width:200px; height: 5px">
-                            </div>
+                        <div class="d-flex align-items-center ms-2">         
                             {{-- search by client name  --}}
                             <select name="client_id[]" id="client_id" class="chosen-select" style="min-width: 200px;" multiple data-placeholder="Select clients...">
                                 @foreach($clients as $client)
@@ -116,16 +116,16 @@
                                         <li>Email: {{ $d->distributor_email }}</li>
                                         <li>PAN:{{ $d->pan_number}}</li>
                                         <li>GST:{{ $d->gst_number }}</li>
-                                        <li>Distributor Contact person:{{ $d->distributor_contact_person ? $d->distributor_contact_person : 'NA'}}</li>
+                                        <li>Distributor Contact person:{{ ucwords($d->distributor_contact_person ? $d->distributor_contact_person : 'NA')}}</li>
                                         <li>Distributor Contact person Phone:{{ $d->distributor_contact_person_phone ? $d->distributor_contact_person_phone : 'NA' }}</li>
-                                        <li>SO Name:{{ $d->so_name ? $d->so_name : 'NA' }}</li>
+                                        <li>SO Name:{{ ucwords($d->so_name ? $d->so_name : 'NA') }}</li>
                                         <li>SO Contact:{{ $d->so_contact_no ? $d->so_contact_no : 'NA'}}</li>
                                     </ul>
                                 </td>
                                 <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
                                 <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
                                 <td>
-                                    <div class="d-flex flex-wrap align-items-center gap-0">
+                                    <div class="d-flex align-items-center gap-2 flex-wrap">
                                         {{-- <button type="button">Site readiness form</button> --}}
                                         <a href="{{ route('admin.client.siteReadinessForm', $d->id)}}" target="_blank" 
                                             class="btn btn-outline-warning btn-sm">Site Readiness Form
@@ -160,7 +160,7 @@
                                     @endif
                                 </td>
                                 
-                               <td>
+                                <td>
                                     @if($d->site_ready == 1 && $d->training_done == 1)
                                         {{-- Both complete → show SUCCESS --}}
                                         <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>

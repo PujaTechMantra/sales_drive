@@ -262,20 +262,6 @@ class ClientListController extends Controller
         return redirect()->route('admin.slot-booking.distributorList')->with('success', 'Site ready Remarks added successfully');
     }
 
-    // public function completeStatus(Request $request, $id) {
-    //     $booking = SlotBooking::findOrFail($id);
-    //     $booking->complete_status = $request->status;
-        
-    //     if ($booking->site_ready == 1 && $booking->training_done == 1) {
-    //         $booking->complete_status = 'success';
-    //     }
-    //     $booking->save();
-
-    //     return response()->json([
-    //         'status'    => 200,
-    //         'message'   => 'Status changed'
-    //     ]);
-    // }
     public function completeStatus(Request $request, $id)
     {
         $booking = SlotBooking::findOrFail($id);
