@@ -68,7 +68,7 @@
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-striped">
                     <thead class="table-light">
-                        <tr>
+                        <tr class="text-center">
                             <th>#</th>
                             <th>Distributor Name</th>
                             <th>Distributor Details</th>
@@ -105,7 +105,7 @@
                                 <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
 
                                 <td>
-                                    <div class="d-flex align-items-center gap-2">
+                                    <div class="d-flex gap-2">
                                         @if($d->site_ready == 1)
                                             <span class="badge bg-success rounded-pill px-3 py-2">COMPLETE</span>
                                         @else
@@ -119,6 +119,8 @@
                                     </div>
                                 </td>
                                 <td>
+                                    <div class="d-flex gap-2">
+
                                     @if($d->user && $d->user->training_status == 0)
                                         <span class="badge bg-danger rounded-pill px-3 py-2">PENDING</span>
                                         <button type="button" class="btn btn-sm btn-outline-primary rounded-circle trainingViewRemarksBtn"
@@ -127,7 +129,7 @@
                                         </button>
                                     @else
                                         @if($d->site_ready)
-                                            <div class="form-check form-switch" data-bs-toggle="tooltip">
+                                            <div class="d-flex form-check form-switch" data-bs-toggle="tooltip">
                                                 <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
                                                     {{ $d->training_done ? 'checked' : '' }}
                                                     onclick="statusToggle('{{route('client.trainingDone', $d->id)}}', this)">
@@ -142,8 +144,10 @@
                                             <h8>Waiting for site ready...</h8>                                        
                                         @endif
                                     @endif
+                                    </div>
                                 </td>
                                 <td>
+                                    <div class="d-flex gap-2">
                                     @if($d->site_ready == 1 && $d->training_done == 1)
                                   
                                         <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
@@ -151,16 +155,15 @@
                                     @elseif($d->complete_status == 'pending')
                                         <span class="badge bg-warning rounded-pill px-3 py-2">Wait for status</span>
 
-                                    @elseif($d->complete_status == 'waiting for reschedule')
-                                        <span class="badge bg-danger rounded-pill px-3 py-2">WAITING FOR RESCHEDULE</span>
-                                        <a href="{{ route('client.slot.rescheduleForm', $d->id) }}"
-                                            class="btn btn-outline-primary btn-sm rounded-pill shadow-sm px-4 mt-1 rescheduleBtn">
+                                        <a href="{{ route('client.slot.rescheduleForm', $d->id) }}" class="btn btn-outline-primary btn-sm rounded-pill shadow-sm px-4 rescheduleBtn">
                                             Reschedule
                                         </a>
                                     @elseif($d->complete_status == 'rescheduled')
                                         <span class="badge bg-info rounded-pill px-3 py-2">RESCHEDULED</span>
 
                                     @endif
+                                </div>
+                                    
                                 </td>
                             </tr>
                         @empty

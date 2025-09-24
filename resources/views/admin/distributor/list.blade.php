@@ -172,10 +172,10 @@
                                     @elseif($d->site_ready == 0 && $d->training_done == 0)
                                         {{-- Both are 0 → show dropdown --}}
                                         <div>
-                                            <select class="form-select form-select-sm w-auto status-dropdown" data-id="{{ $d->id }}">                        
+                                            <!-- <select class="form-select form-select-sm w-auto status-dropdown" data-id="{{ $d->id }}">                        
                                                 <option value="pending" {{ $d->complete_status == 'pending' ? 'selected' : '' }}>Pending</option>
                                                 <option value="waiting for reschedule" {{ $d->complete_status == 'waiting for reschedule' ? 'selected' : '' }}>Waiting for Reschedule</option>
-                                            </select>
+                                            </select> -->
 
                                             <div class="mt-2 status-badge">
                                                 @if($d->complete_status == 'waiting for reschedule')

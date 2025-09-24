@@ -44,71 +44,71 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <label class="form-label">Distributor Code (SAP)</label>
-                        <input type="text" class="form-control" value="{{ $booking->distributor_code }}" readonly>
+                        <input type="text" name="distributor_code" class="form-control" value="{{ $booking->distributor_code }}" >
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Name</label>
-                        <input type="text" class="form-control" value="{{ $booking->distributor_name }}" readonly>
+                        <input type="text" name="distributor_name" class="form-control" value="{{ $booking->distributor_name }}" >
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Full Address</label>
-                        <textarea class="form-control" rows="2" readonly>{{ $booking->distributor_address }}</textarea>
+                        <textarea class="form-control" name="distributor_address" rows="2" >{{ $booking->distributor_address }}</textarea>
                     </div>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-3">
                         <label class="form-label">Phone</label>
-                        <input type="text" class="form-control" value="{{ $booking->distributor_contact_no }}" readonly>
+                        <input type="text" name="distributor_contact_no" class="form-control" value="{{ $booking->distributor_contact_no }}" >
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Email</label>
-                        <input type="email" class="form-control" value="{{ $booking->distributor_email }}" readonly>
+                        <input type="email" name="distributor_email" class="form-control" value="{{ $booking->distributor_email }}" >
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">PAN</label>
-                        <input type="text" class="form-control" value="{{ $booking->pan_number }}" readonly>
+                        <input type="text" name="pan_number" class="form-control" value="{{ $booking->pan_number }}" >
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">GST</label>
-                        <input type="text" class="form-control" value="{{ $booking->gst_number }}" readonly>
+                        <input type="text"  name="gst_number" class="form-control" value="{{ $booking->gst_number }}" >
                     </div>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <label class="form-label">City</label>
-                        <input type="text" class="form-control" value="{{ $booking->city }}" readonly>
+                        <input type="text" name="city" class="form-control" value="{{ $booking->city }}" >
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">State</label>
-                        <input type="text" class="form-control" value="{{ $booking->state }}" readonly>
+                        <input type="text" name="state" class="form-control" value="{{ $booking->state }}" >
                     </div>
                     <div class="col-md-4">
                         <label class="form-label">Zone</label>
-                        <input type="text" class="form-control" value="{{ $booking->zone }}" readonly>
+                        <input type="text" name="zone" class="form-control" value="{{ $booking->zone }}" >
                     </div>
                 </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label class="form-label">Contact Person (optional)</label>
-                        <input type="text" class="form-control" value="{{ $booking->distributor_contact_person }}" readonly>
+                        <input type="text" name="distributor_contact_person" class="form-control" value="{{ $booking->distributor_contact_person }}" >
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">Contact Person Phone (optional)</label>
-                        <input type="text" class="form-control" value="{{ $booking->distributor_contact_person_phone }}" readonly>
+                        <input type="text" name="distributor_contact_person_phone" class="form-control" value="{{ $booking->distributor_contact_person_phone }}" >
                     </div>
                 </div>
 
                 <div class="row g-3">
                     <div class="col-md-6">
                         <label class="form-label">SO Name (optional)</label>
-                        <input type="text" class="form-control" value="{{ $booking->so_name }}" readonly>
+                        <input type="text" name="so_name" class="form-control" value="{{ $booking->so_name }}" >
                     </div>
                     <div class="col-md-6">
                         <label class="form-label">SO Contact No (optional)</label>
-                        <input type="text" class="form-control" value="{{ $booking->so_contact_no }}" readonly>
+                        <input type="text" name="so_contact_no" class="form-control" value="{{ $booking->so_contact_no }}" >
                     </div>
                 </div>
             </div>
@@ -146,7 +146,8 @@
         // init flatpickr for reschedule
         flatpickr("#slot_date_reschedule", {
             dateFormat: "Y-m-d",
-            defaultDate: "{{ $booking->slot_date }}", 
+            defaultDate: "{{ $booking->slot_date }}",
+            minDate: "today", 
             disable: [
                 function(date) {
                     return !allowedDayIndexes.includes(date.getDay());
@@ -166,7 +167,7 @@
                             option.value = slot.id;
                             option.dataset.start = slot.start_time;
                             option.dataset.end = slot.end_time;
-                            option.textContent = `${slot.start_time_formatted} to ${slot.end_time_formatted}`;
+                            option.textContent = `${slot.start_time_formatted} to ${slot.end_time_formatted} (${slot.booked}/${slot.slot} booked)`;
                             slotDropdown.appendChild(option);
                         });
                     }

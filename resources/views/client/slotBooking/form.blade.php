@@ -15,7 +15,7 @@
                 @csrf
                 <!-- Staff -->
                 <div class="mb-4">
-                    <label class="form-label fw-semibold">Staff Name</label>
+                    <label class="form-label fw-semibold">Client Name</label>
                     <input type="text" class="form-control" value="{{ ucwords($client->name) }}" readonly>
                 </div>
 
@@ -151,6 +151,7 @@
         
         flatpickr("#slot_date", {
             dateFormat: "Y-m-d",
+            minDate: "today",  
             disable: [
                 function(date) {
                     // disable days not in allowedDayIndexes
@@ -166,13 +167,13 @@
                     let slotDropdown = document.getElementById("slot_id");
                     slotDropdown.innerHTML = `<option value="">-- Select Slot --</option>`;
 
-                    if(slotsByDay[dayName]) {
+                    if (slotsByDay[dayName]) {
                         slotsByDay[dayName].forEach(slot => {
                             let option = document.createElement("option");
                             option.value = slot.id;
                             option.dataset.start = slot.start_time;
                             option.dataset.end = slot.end_time;
-                            option.textContent = `${slot.start_time_formatted} to ${slot.end_time_formatted}`;
+                            option.textContent = `${slot.start_time_formatted} to ${slot.end_time_formatted} (${slot.booked}/${slot.slot} booked)`;
                             slotDropdown.appendChild(option);
                         });
                     }
