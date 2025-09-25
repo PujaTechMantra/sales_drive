@@ -11,19 +11,19 @@
     <ul class="menu-inner py-1 ps">
 
       {{-- Client Dashboard --}}
-      <li class="menu-item {{ (request()->is('user/dashboard*')) ? 'open' : '' }}">
+      <li class="menu-item {{ (request()->is('user/dashboard*')) ? 'active' : '' }}">
         <a href="{{route('client.dashboard')}}" class="menu-link">
           <i class="menu-icon fa-solid fa-house"></i>
           <div>Dashboard</div>
         </a>
       </li>
 
-      <li class="menu-item {{ (request()->is('user/master-module*')) ? 'open' : '' }}">
+      <!-- <li class="menu-item {{ (request()->is('user/master-module*')) ? 'open' : '' }}">
         <a href="javascript:void(0)" class="menu-link menu-toggle waves-effect">
           <i class="menu-icon fa-solid fa-house"></i>
           <div>Master Module</div>
-        </a>
-        <ul class="menu-sub"> 
+        </a> -->
+        <!-- <ul class="menu-sub">  -->
           <li class="menu-item {{ (request()->is('user/master-module/slot-booking-form')) ? 'active' : '' }}">
             <a href="{{route('client.slot-booking.index')}}" class="menu-link">
               <div>Slot Booking Form</div>
@@ -35,8 +35,8 @@
               <div>Distributor List</div>
             </a>
           </li>   
-        </ul>
-      </li>
+        <!-- </ul> -->
+      <!-- </li> -->
 
 
       {{-- Logout --}}

@@ -87,7 +87,7 @@
             <div class="table-responsive">
                 <table class="table table-hover table-bordered table-striped">
                     <thead class="table-light">
-                        <tr>
+                        <tr class="text-center">
                             <th>#</th>
                             <th>Client Name</th>
                             <th>Distributor Name</th>
@@ -125,12 +125,12 @@
                                 <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
                                 <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
                                 <td>
-                                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <div class="d-flex align-items-center gap-2 ">
                                         {{-- <button type="button">Site readiness form</button> --}}
                                         <a href="{{ route('admin.client.siteReadinessForm', $d->id)}}" target="_blank" 
                                             class="btn btn-outline-warning btn-sm">Site Readiness Form
                                         </a>
-                                        <div class="form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
+                                        <div class="d-flex form-check form-switch" data-bs-toggle="tooltip" title="Toggle status">
                                             <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
                                                 {{ $d->site_ready ? 'checked' : '' }}
                                                 onclick="statusSiteReadyToggle('{{route('admin.client.siteReady', $d->id)}}', this)">
@@ -143,8 +143,10 @@
                                     </div>
                                 </td>
                                 <td>
+                                    <div class="d-flex align-items-center gap-2 ">
+
                                     @if($d->site_ready)
-                                        <div class="form-check form-switch" data-bs-toggle="tooltip">
+                                        <div class="d-flex form-check form-switch" data-bs-toggle="tooltip">
                                             <input class="form-check-input ms-auto" type="checkbox" id="customSwitch{{$d->id}}"
                                                 {{ $d->training_done ? 'checked' : '' }}
                                                 onclick="statusToggle('{{route('admin.client.trainingDone', $d->id)}}', this)">
@@ -158,6 +160,8 @@
                                     @else
                                         {{-- keep blank --}}
                                     @endif
+                                    </div>
+
                                 </td>
                                 
                                 <td>
