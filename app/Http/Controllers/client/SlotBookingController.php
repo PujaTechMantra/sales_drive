@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Models\{SlotBooking, RequiredDaySlot, User};
+use App\Models\UserActivityLog;
 
 class SlotBookingController extends Controller
 {
@@ -212,7 +213,7 @@ class SlotBookingController extends Controller
         }
 
         foreach ($request->distributor_name as $index => $name) {
-            SlotBooking::create([
+           $booking = SlotBooking::create([
                 'client_id'              => Auth::guard('client')->id(),
                 'distributor_name'       => $name,
                 'distributor_address'    => $request->distributor_address[$index],
@@ -229,8 +230,17 @@ class SlotBookingController extends Controller
                 'so_name'               => $request->so_name[$index],
                 'so_contact_no'         => $request->so_contact_no[$index],
                 'slot_date'             => $slotDate,
+                'slot_date_1st'         => $slotDate,
                 'slot_start_time'       => $request->slot_start_time,
                 'slot_end_time'         => $request->slot_end_time,
+            ]);
+
+            UserActivityLog::create([
+                'user_id' => Auth::guard('client')->id(),
+                'action' => 'slot_booked',
+                'user_data' => $booking->toArray(),
+                'ip_address' => request()->ip(),
+                'user_agent' => request()->userAgent(),
             ]);
         }
 
@@ -378,6 +388,14 @@ class SlotBookingController extends Controller
         $booking->complete_status = 'rescheduled';
         $saved = $booking->save();
         // dd($saved);
+
+        UserActivityLog::create([
+            'user_id' => Auth::guard('client')->id(),
+            'action' => 'slot_rescheduled',
+            'user_data' => $booking->toArray(),
+            'ip_address' => request()->ip(),
+            'user_agent' => request()->userAgent(),
+        ]);
 
         return redirect()
             ->route('client.slot-booking.distributorList')

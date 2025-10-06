@@ -13,8 +13,26 @@ use App\Models\{User, SlotBooking, SiteReadinessForm, RequiredDaySlot};
 
 class ClientListController extends Controller
 {
-    //
-    public function index(Request $request){
+    // //
+    // public function index(Request $request){
+    //     $keyword = $request->input('keyword');
+
+    //     $query = User::query();
+    //     $query->when($keyword, function ($q) use ($keyword) {
+    //         $q->where(function($subQuery) use ($keyword) {
+    //             $subQuery->where('name', 'like', '%' . $keyword . '%')
+    //                 ->orWhere('email', 'like', '%' . $keyword . '%')
+    //                 ->orWhere('address', 'like', '%' . $keyword . '%')
+    //                 ->orWhere('mobile_no', 'like', '%' . $keyword . '%');
+    //         });
+    //     });
+
+    //     $client = $query->latest('id')->paginate(10);
+
+    //     return view('admin.clients.index', compact('client'));
+    // }
+
+    public function index(Request $request) {
         $keyword = $request->input('keyword');
 
         $query = User::query();
@@ -27,10 +45,14 @@ class ClientListController extends Controller
             });
         });
 
-        $client = $query->latest('id')->paginate(10);
+        $clients = $query->latest('id')->paginate(10);
 
-        return view('admin.clients.index', compact('client'));
+        // Fetch distributors with reschedules
+        $distributors = \App\Models\SlotBooking::with(['user', 'reschedules'])->paginate(10);
+
+        return view('admin.clients.index', compact('clients', 'distributors'));
     }
+
 
     public function store(Request $request) {
         $validated = $request->validate([
