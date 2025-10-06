@@ -152,15 +152,24 @@
                                   
                                         <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
 
-                                    @elseif($d->complete_status == 'pending')
+                                    @elseif($d->complete_status == 'rescheduled')
+                                        <span class="badge bg-info rounded-pill px-3 py-2">RESCHEDULED</span>
+
+                                    @elseif($d->complete_status == 'failed')
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">FAILED</span>
+                                        <span class="badge bg-warning rounded-pill px-3 py-2">Waiting for reschedule</span>
+
+                                        <a href="{{ route('client.slot.rescheduleForm', $d->id) }}" class="btn btn-outline-primary btn-sm rounded-pill shadow-sm px-4 rescheduleBtn">
+                                            Reschedule
+                                        </a>
+
+                                    @elseif(($d->site_ready == 0 && $d->training_done == 0) || $d->complete_status == 'pending')
                                         <span class="badge bg-warning rounded-pill px-3 py-2">Wait for status</span>
 
                                         <a href="{{ route('client.slot.rescheduleForm', $d->id) }}" class="btn btn-outline-primary btn-sm rounded-pill shadow-sm px-4 rescheduleBtn">
                                             Reschedule
                                         </a>
-                                    @elseif($d->complete_status == 'rescheduled')
-                                        <span class="badge bg-info rounded-pill px-3 py-2">RESCHEDULED</span>
-
+                         
                                     @endif
                                 </div>
                                     

@@ -87,7 +87,9 @@ Route::prefix('admin')->group(function () {
                 Route::get('/training-status/{id}', [ClientListController::class, 'trainingStatus'])->name('admin.client.trainingStatus');
                 Route::get('/slot-date/{id}', [ClientListController::class, 'getSlotdate'])->name('admin.client.getSlotdate');
                 Route::post('/slot-date/save', [ClientListController::class, 'saveSlotdate'])->name('admin.client.saveSlotdate');
+                Route::post('/slot-booking/refresh', [ClientListController::class, 'refreshFailedSlots'])->name('admin.slot-booking.refresh');
             });
+
 
             //master module/distributor, site ready, remarks
             Route::get('/distributor-list', [ClientListController::class, 'distributorList'])->name('admin.slot-booking.distributorList');

@@ -600,7 +600,41 @@ class ClientListController extends Controller
             ]);
        }
     }
-    
 
 
+
+    public function refreshFailedSlots(Request $request)
+    {
+        try {
+            $today = Carbon::today();
+
+            $slots = SlotBooking::whereDate('slot_date', '<', $today)
+            ->where(function($q){
+                $q->where('site_ready', 0)
+                  ->orWhere('training_done', 0);
+            })
+            ->where('complete_status', '<>', 'failed')
+            ->get();
+            // $updatedCount = SlotBooking::where('site_ready', 0)->update(['site_ready' => 1]);
+
+             $updatedCount = $slots->count();
+
+            if($updatedCount > 0){
+               SlotBooking::whereIn('id', $slots->pluck('id')->toArray())
+                    ->update(['complete_status' => 'failed']);
+            }
+
+            return response()->json([
+                'status' => 200,
+                'message' => 'Incomplete slots refreshed successfully!',
+                'updated_count' => $updatedCount
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 500,
+                'message' => 'Server error: ' . $e->getMessage()
+            ]);
+        }
+    }
 }

@@ -53,7 +53,9 @@
                                 value="{{ request()->input('keyword') }}" placeholder="Search" style=" width:200px; height: 5px">
                         </div>
                         {{-- Left side (Slot Date Filter) --}}
-                        <div class="d-flex align-items-center ms-2">         
+                        
+                        <div class="d-flex align-items-center ms-2">      
+                     
                             {{-- search by client name  --}}
                             <select name="client_id[]" id="client_id" class="chosen-select" style="min-width: 200px;" multiple data-placeholder="Select clients...">
                                 @foreach($clients as $client)
@@ -80,6 +82,10 @@
                                 data-toggle="tooltip" title="Export Data">
                                 <i class="tf-icons ri-download-line"></i>
                             </a>
+
+                            <button type="button" onclick="refresh_data()" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Refresh Slot">
+                                <i class="tf-icons ri-refresh-line"></i>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -165,6 +171,8 @@
                                 </td>
                                 
                                 <td>
+                                    <div class="d-flex gap-2" data-bs-toggle="tooltip">
+
                                     @if($d->site_ready == 1 && $d->training_done == 1)
                                         {{-- Both complete → show SUCCESS --}}
                                         <span class="badge bg-success rounded-pill px-3 py-2">SUCCESS</span>
@@ -172,6 +180,10 @@
                                     @elseif($d->complete_status == 'rescheduled')
                                         {{-- After client reschedules → show RESCHEDULED --}}
                                         <span class="badge bg-info rounded-pill px-3 py-2">RESCHEDULED</span>
+                                    @elseif($d->complete_status == 'failed')
+                                        <span class="badge bg-danger rounded-pill px-3 py-2">FAILED</span>
+                                                    
+                                        <span class="badge bg-warning rounded-pill px-3 py-2">WAITING FOR RESCHEDULE</span>
 
                                     @elseif($d->site_ready == 0 && $d->training_done == 0)
                                         {{-- Both are 0 → show dropdown --}}
@@ -189,6 +201,8 @@
                                                 @endif
                                             </div>
                                         </div>
+                                    </div>
+
 
                                     @else
                                         {{-- One is 1 and other is 0 → nothing shown --}}
@@ -344,6 +358,46 @@
             }
         });
     });
+
+    function refresh_data() {
+    // console.log('Refresh button clicked');
+        Swal.fire({
+            icon: 'warning',
+            title: "Are you sure you want to refresh incomplete slots?",
+            // text: "You won't be able to revert this!",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ok",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                        
+                // if (!confirm('Are you sure you want to refresh incomplete slots?')) return;
+
+                $jq.ajax({
+                    url: "{{ route('admin.slot-booking.refresh') }}",
+                    type: "POST",
+                    data: { _token: "{{ csrf_token() }}" },
+                    success: function(response) {
+                        if(response.status === 200){
+                            toastFire('success', response.message + " (Total updated: " + response.updated_count + ")");
+                            setTimeout(() => {
+                                location.reload();
+                            }, 5000);
+                        } else {
+                            toastFire('error','Something went wrong.');
+                        }
+                    },
+                    error: function(err){
+                        console.error(err);
+                        // alert('Error refreshing data.');
+                    }
+                });
+            }
+         });
+    }
+
+
 
 </script>
 @endsection
