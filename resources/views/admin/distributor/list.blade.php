@@ -28,6 +28,11 @@
         color: red;
     }
 
+    .slot-date-col {
+        width: 130px; 
+        min-width: 130px;
+        text-align: center;
+    }
 </style>
 
 
@@ -129,8 +134,8 @@
                                     </ul>
                                 </td>
                                 <!-- <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td> -->
-                               <td>
-                                 <div class="mb-2">{{ $d->slot_date_1st }}</div>
+                                <td class="slot-date-col">
+                                    <div class="mb-2">{{ date('d-m-Y',strtotime($d->slot_date_1st)) }}</div>
 
                                    @php
                                         $dates = [];
@@ -149,13 +154,13 @@
                                     @endphp
 
                                     @foreach($dates as $date)
-                                        <div class="mb-2"><span class="text-info">{{ $date['label'] }}:</span> {{ $date['date'] }}</div>
+                                        <div class="mb-2"><span class="text-info">{{ $date['label'] }}:</span>
+                                        {{ $date['date'] }}</div>
                                     @endforeach
-
                                 </td>
 
 
-                                <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
+                                <td><div class="slot-date-col">{{ date('h:i A',strtotime($d->slot_start_time))}} - {{date('h:i A',strtotime($d->slot_end_time))}}</div></td>
                                 <td>
                                     <div class="d-flex align-items-center gap-2 ">
                                         {{-- <button type="button">Site readiness form</button> --}}
@@ -213,22 +218,15 @@
 
                                     @elseif($d->site_ready == 0 && $d->training_done == 0)
                                         {{-- Both are 0 → show dropdown --}}
-                                        <div>
-                                            <!-- <select class="form-select form-select-sm w-auto status-dropdown" data-id="{{ $d->id }}">                        
-                                                <option value="pending" {{ $d->complete_status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                                <option value="waiting for reschedule" {{ $d->complete_status == 'waiting for reschedule' ? 'selected' : '' }}>Waiting for Reschedule</option>
-                                            </select> -->
-
+                                          
                                             <div class="mt-2 status-badge">
-                                                @if($d->complete_status == 'waiting for reschedule')
+                                                <!-- @if($d->complete_status == 'waiting for reschedule')
                                                     <span class="badge bg-danger rounded-pill px-3 py-2">WAITING FOR RESCHEDULE</span>
-                                                @else
+                                                @else -->
                                                     <span class="badge bg-warning rounded-pill px-3 py-2">PENDING</span>
-                                                @endif
+                                                <!-- @endif -->
                                             </div>
-                                        </div>
                                     </div>
-
 
                                     @else
                                         {{-- One is 1 and other is 0 → nothing shown --}}
@@ -362,8 +360,6 @@
         // Update badge instantly
         if (status === "pending") {
             badgeDiv.html('<span class="badge bg-warning rounded-pill px-3 py-2">PENDING</span>');
-        } else if (status === "waiting for reschedule") {
-            badgeDiv.html('<span class="badge bg-danger rounded-pill px-3 py-2">WAITING FOR RESCHEDULE</span>');
         }
 
         // Save to DB using route()

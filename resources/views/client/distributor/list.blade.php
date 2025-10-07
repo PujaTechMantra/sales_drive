@@ -29,6 +29,11 @@
         content: "PENDING";
         color: red;
     }
+    .slot-date-col{
+        width: 130px; /* adjust as needed */
+        min-width: 130px;
+        text-align: center;
+    }
 </style>
 
 
@@ -101,8 +106,32 @@
                                         <li>SO Contact:{{ $d->so_contact_no ? $d->so_contact_no : 'NA'}}</li>
                                     </ul>
                                 </td>
-                                <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td>
-                                <td>{{ date('h:i A',strtotime($d->slot_start_time))}} to {{date('h:i A',strtotime($d->slot_end_time))}}</td>
+                                <!-- <td>{{ date('d-m-Y',strtotime($d->slot_date)) }}</td> -->
+                                  <td class="slot-date-col">
+                                    <div class="mb-2">{{ date('d-m-Y',strtotime($d->slot_date_1st)) }}</div>
+
+                                   @php
+                                        $dates = [];
+
+                                        $filteredReschedules = $d->reschedules->filter(function ($log) use ($d) {
+                                            return isset($log->user_data['distributor_code']) &&
+                                                $log->user_data['distributor_code'] === $d->distributor_code;
+                                        });
+
+                                        $count = 1;
+                                        foreach($filteredReschedules as $reschedule){
+                                            if(isset($reschedule->user_data['slot_date'])){
+                                                $dates[] = ['label' => 'Reschedule '.$count++, 'date' => \Carbon\Carbon::parse($reschedule->user_data['slot_date'])->format('d-m-Y')];
+                                            }
+                                        }
+                                    @endphp
+
+                                    @foreach($dates as $date)
+                                        <div class="mb-2"><span class="text-info">{{ $date['label'] }}:</span>
+                                        {{ $date['date'] }}</div>
+                                    @endforeach
+                                </td>
+                                <td><div class="slot-date-col">{{ date('h:i A',strtotime($d->slot_start_time))}} - {{date('h:i A',strtotime($d->slot_end_time))}}</div></td>
 
                                 <td>
                                     <div class="d-flex gap-2">

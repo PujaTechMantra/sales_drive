@@ -48,7 +48,7 @@ class ClientListController extends Controller
         $client = $query->latest('id')->paginate(10);
 
         // Fetch distributors with reschedules
-        $distributors = \App\Models\SlotBooking::with(['user', 'reschedules'])->paginate(10);
+        $distributors = \App\Models\SlotBooking::with(['user', 'reschedules']);
 
         return view('admin.clients.index', compact('client', 'distributors'));
     }

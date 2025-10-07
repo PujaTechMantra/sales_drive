@@ -54,8 +54,9 @@ class SlotBookingController extends Controller
 
         $available_day = $required_day_slots->pluck('day')->toArray();
         $slotsByDay    = $required_day_slots->groupBy('day');
+        $distributors = \App\Models\SlotBooking::with(['user', 'reschedules']);
                                     
-        return view('client.slotBooking.form', compact('client','available_day','required_day_slots','slotsByDay'));
+        return view('client.slotBooking.form', compact('client','available_day','required_day_slots','slotsByDay','distributors'));
     }
 
 
